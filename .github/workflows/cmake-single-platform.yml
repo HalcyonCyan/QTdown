@@ -1,4 +1,4 @@
-name: Build Qt C++ Project
+name: Build Qt6 C++ Project
 
 on:
   push:
@@ -11,42 +11,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1️⃣ Checkout 代码
+    # 1️⃣ 检出代码
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
-    # 2️⃣ 安装构建工具和依赖
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential cmake git \
-          qt6-base-dev qt6-declarative-dev qt6-linguist-tools \
-          qt6-tools-dev qt6-tools-dev-tools \
-          qt6-multimedia-dev qt6-svg-dev \
-          qt6-wayland-dev qt6-x11extras-dev
-
-    # 3️⃣ 设置 Qt6 环境变量
-    - name: Set Qt6 environment variables
-      run: |
-        echo "Qt6_DIR=/usr/lib/x86_64-linux-gnu/cmake/Qt6" >> $GITHUB_ENV
-
-    # 4️⃣ 创建构建目录并运行 CMake
-    - name: Configure CMake
-      run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DQt6_DIR=$Qt6_DIR
-
-    # 5️⃣ 编译项目
-    - name: Build project
-      run: cmake --build build -- -j$(nproc)
-
-    # 6️⃣ 可选：运行测试
-    - name: Run tests
-      run: |
-        cd build
-        ctest --output-on-failure
-
-    # 7️⃣ 可选：上传构建产物
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
+    # 2️⃣ 安装 Qt6（包括 LinguistTools & X11Extras）
+    - name: Setup Qt6
+      uses: qt-actions/setup-qt@v2
       with:
-        name: qt-build
-        path: build/
+        version: 6.6.2        # 指定 Qt6 版本
+        host: linux
+        modules: qtbase, linguisttools, x11extras
+
+    # 3️⃣ 确认 Qt6 环境变量
+    - name: Display Qt paths
+      run: |
+        echo "QT_DIR=$QT_DIR"
+        echo "PATH=$PATH"
+
+    # 4️⃣ 创建 build 目录
+    - name: Create build directory
+      run: mkdir -p build
+
+    # 5️⃣ 配置 CMake
+    - name: Configure CMake
+      run: cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DQt6_DIR=$QT_DIR/lib/cmake/Qt6
+
+    # 6️⃣ 编译项目
+    - name: Build Project
+      run: cmake --build build --config Release --parallel
+
+    # 7️⃣ 可选：运行单元测试（如果有）
+    - name: Run tests
+      run: ctest --test-dir build --output-on-failure
