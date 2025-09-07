@@ -1,71 +1,60 @@
-name: Build Qt6 Project
+name: Build Qt C++ Project
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
+
+    env:
+      QT_DIR: ${{ runner.temp }}/Qt6
+      QT_VERSION: "6.5.3"
 
     steps:
-    # 1️⃣ Checkout 代码
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    # 2️⃣ 安装 Python & pip（aqt 依赖）
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.13"
+      - name: Set up Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
 
-    - name: Upgrade pip
-      run: |
-        python3 -m pip install --upgrade pip
+      - name: Install aqtinstall
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install aqtinstall
 
-    # 3️⃣ 安装 aqt（Qt 在线安装器管理工具）
-    - name: Install aqt
-      run: |
-        python3 -m pip install aqtinstall
+      - name: Install Qt 6.5.3 with LinguistTools
+        run: |
+          python3 -m aqt install-qt linux desktop $QT_VERSION linux-g++-64 \
+            --modules qtbase qttools linguisttools \
+            --outputdir $QT_DIR \
+            --autodesktop
 
-    # 4️⃣ 安装 Qt6 + LinguistTools
-    - name: Install Qt6
-      run: |
-        python3 -m aqt install-qt linux desktop 6.6.0 linux-g++-64 \
-            --modules qtbase qttools qttranslations \
-            --outputdir $HOME/Qt --autodesktop
-        echo "Qt6 installed to $HOME/Qt"
+      - name: Add Qt bin to PATH
+        run: |
+          echo "$QT_DIR/$QT_VERSION/gcc_64/bin" >> $GITHUB_PATH
 
-    # 5️⃣ 设置 Qt 环境变量
-    - name: Setup Qt Environment
-      run: |
-        export PATH="$HOME/Qt/6.6.0/gcc_64/bin:$PATH"
-        echo "$HOME/Qt/6.6.0/gcc_64/bin" >> $GITHUB_PATH
-        qmake --version
+      - name: Create build directory
+        run: mkdir -p build
 
-    # 6️⃣ 生成翻译文件 (.qm)
-    - name: Run lupdate & lrelease
-      run: |
-        if [ -d "translations" ]; then
-          find . -name "*.ts" | while read tsfile; do
-            lupdate . -ts "$tsfile"
-            lrelease "$tsfile"
-          done
-        fi
+      - name: Run CMake
+        run: cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DQt6_DIR=$QT_DIR/$QT_VERSION/gcc_64/lib/cmake/Qt6
 
-    # 7️⃣ 创建构建目录并运行 CMake
-    - name: Configure & Build
-      run: |
-        mkdir -p build
-        cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release -DQt6_DIR=$HOME/Qt/6.6.0/gcc_64/lib/cmake/Qt6
-        cmake --build . --parallel $(nproc)
+      - name: Build project
+        run: cmake --build build --parallel
 
-    # 8️⃣ （可选）列出生成文件
-    - name: List build artifacts
-      run: ls -R build
+      - name: Update translation files (.ts → .qm)
+        run: |
+          if [ -d "translations" ]; then
+            for tsfile in translations/*.ts; do
+              lrelease "$tsfile" -qm "build/$(basename ${tsfile%.ts}.qm)"
+            done
+          fi
+
+      - name: List built files
+        run: ls -R build
