@@ -1,19 +1,19 @@
-name: Build Qt6 C++ Project
+name: Build Qt C++ Project
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     env:
-      QT_VERSION: "6.6.0"        # 设置你需要的 Qt6 版本
-      QT_ARCH: "gcc_64"          # Linux 64 位
-      BUILD_DIR: build
+      QT_INSTALL_DIR: /opt/Qt6
+      QT_VERSION: 6.6.0
+      QT_COMPONENT: qt.qt6.660.gcc_64
 
     steps:
     - name: Checkout repository
@@ -22,59 +22,38 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          ninja-build \
-          libgl1-mesa-dev \
-          libx11-dev \
-          libxcb1-dev \
-          libx11-xcb-dev \
-          libxcb-glx0-dev \
-          libxkbcommon-x11-dev \
-          perl \
-          python3 \
-          git \
-          wget \
-          tar
+        sudo apt-get install -y wget perl python3
 
-    - name: Download and install Qt6
+    - name: Download Qt Online Installer
       run: |
-        # 下载官方 Qt 在线安装器
-        QT_RUNNER="qt-installer-linux.run"
-        wget -O $QT_RUNNER https://download.qt.io/official_releases/qt/$QT_VERSION/$QT_VERSION/qt-opensource-linux-x64-$QT_VERSION.run
-        chmod +x $QT_RUNNER
+        wget https://download.qt.io/official_releases/online_installers/qt-online-installer-linux-x64-online.run -O qt-installer.run
+        chmod +x qt-installer.run
 
-        # 创建非交互式安装脚本
-        cat > qt-install-noninteractive.qs <<EOF
+    - name: Create non-interactive installation script
+      run: |
+        cat > qt-install-noninteractive.qs <<'EOF'
         var installer = gui.currentInstaller();
-        installer.setTargetDirectory("/opt/Qt$QT_VERSION");
-        var component = "qt.qt6.$QT_VERSION.$QT_ARCH";
-        installer.selectComponent(component);
+        installer.setTargetDirectory(installer.value("QT_INSTALL_DIR"));
+        installer.selectComponent(installer.value("QT_COMPONENT"));
         installer.performInstallation();
         installer.autoRejectMessageBoxes();
         EOF
 
-        # 安装 Qt6
-        sudo ./$QT_RUNNER --script qt-install-noninteractive.qs
+    - name: Install Qt6 non-interactively
+      run: |
+        sudo QT_INSTALL_DIR=$QT_INSTALL_DIR QT_COMPONENT=$QT_COMPONENT ./qt-installer.run --script qt-install-noninteractive.qs
 
-        # 设置环境变量
-        echo "/opt/Qt$QT_VERSION/$QT_ARCH/lib/cmake" >> $GITHUB_PATH
-        echo "/opt/Qt$QT_VERSION/$QT_ARCH/bin" >> $GITHUB_PATH
-        export Qt6_DIR=/opt/Qt$QT_VERSION/$QT_ARCH/lib/cmake/Qt6
+    - name: Setup environment variables
+      run: |
+        echo "$QT_INSTALL_DIR/$QT_VERSION/gcc_64/bin" >> $GITHUB_PATH
+        echo "$QT_INSTALL_DIR/$QT_VERSION/gcc_64/lib/cmake" >> $GITHUB_PATH
+        export Qt6_DIR=$QT_INSTALL_DIR/$QT_VERSION/gcc_64/lib/cmake/Qt6
+
+    - name: Create build directory
+      run: mkdir -p build
 
     - name: Configure CMake
-      run: |
-        mkdir -p $BUILD_DIR
-        cd $BUILD_DIR
-        cmake .. -DCMAKE_BUILD_TYPE=Release -DQt6_DIR=$Qt6_DIR -G Ninja
+      run: cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DQt6_DIR=$QT_INSTALL_DIR/$QT_VERSION/gcc_64/lib/cmake/Qt6
 
     - name: Build project
-      run: |
-        cd $BUILD_DIR
-        ninja
-
-    - name: Test build (optional)
-      run: |
-        cd $BUILD_DIR
-        ctest --output-on-failure
+      run: cmake --build build --config Release -- -j$(nproc)
