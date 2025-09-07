@@ -1,0 +1,20 @@
+# ninja log v6
+4	655	7789452194576730	DeepRock_autogen/timestamp	25c9b1f707fa5aba
+4	655	7789452194576730	DeepRock_autogen/mocs_compilation.cpp	25c9b1f707fa5aba
+4	655	7789452194576730	C:/Users/10169/Desktop/man100/1.2/build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/DeepRock_autogen/timestamp	25c9b1f707fa5aba
+4	655	7789452194576730	C:/Users/10169/Desktop/man100/1.2/build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/DeepRock_autogen/mocs_compilation.cpp	25c9b1f707fa5aba
+691	1941	7789452195826588	CMakeFiles/DeepRock.dir/platform.cpp.obj	199bcaa2955bce21
+686	1975	7789452195780465	CMakeFiles/DeepRock.dir/player.cpp.obj	356fab59b03d86af
+669	2204	7789452195609516	CMakeFiles/DeepRock.dir/main.cpp.obj	88aad81a446a7d69
+665	2267	7789452195564953	CMakeFiles/DeepRock.dir/DeepRock_autogen/mocs_compilation.cpp.obj	a69d9b3504ba0ed9
+675	2363	7789452195660193	CMakeFiles/DeepRock.dir/mainwindow.cpp.obj	d6cd5bb1731c38c0
+682	2425	7789452195734403	CMakeFiles/DeepRock.dir/gameengine.cpp.obj	18ef9f5b2f4ddc12
+679	2433	7789452195699424	CMakeFiles/DeepRock.dir/gamewindow.cpp.obj	94291cffc09eefb7
+2433	2738	7789452213245691	DeepRock.exe	4503a46899c59721
+38	222	7789452881791679	DeepRock_autogen/timestamp	25c9b1f707fa5aba
+38	222	7789452881791679	DeepRock_autogen/mocs_compilation.cpp	25c9b1f707fa5aba
+38	222	7789452881791679	C:/Users/10169/Desktop/man100/1.2/build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/DeepRock_autogen/timestamp	25c9b1f707fa5aba
+38	222	7789452881791679	C:/Users/10169/Desktop/man100/1.2/build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/DeepRock_autogen/mocs_compilation.cpp	25c9b1f707fa5aba
+223	1928	7789452883633172	CMakeFiles/DeepRock.dir/mainwindow.cpp.obj	d6cd5bb1731c38c0
+227	1929	7789452883673038	CMakeFiles/DeepRock.dir/gameengine.cpp.obj	18ef9f5b2f4ddc12
+1929	2255	7789452900692246	DeepRock.exe	4503a46899c59721

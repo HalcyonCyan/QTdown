@@ -6,9 +6,11 @@
 #include <QPainter>
 #include <QDateTime>
 #include <cmath>
+
 GameEngine::GameEngine(int width, int height, QObject *parent)
     : QObject(parent), width(400), height(500), score(0), scrollOffset(0), gameOver(false),
-    boostActive(false), boostTimer(0), initTime(0), lastUpdateTime(0), deltaTime(0),
+    boostActive(false), boostTimer(0), slowActive(false), slowTimer(0),
+    bounceActive(false), bounceTimer(0), initTime(0), lastUpdateTime(0), deltaTime(0),
     targetVelocityX(0), currentVelocityX(0), gameTime(0)
 {
     player = new Player(width / 2, height / 2, 24, 30);
@@ -45,8 +47,14 @@ void GameEngine::initGame()
     score = 0;
     scrollOffset = 0;
     gameOver = false;
+
+    // 重置所有特殊状态
     boostActive = false;
     boostTimer = 0;
+    slowActive = false;
+    slowTimer = 0;
+    bounceActive = false;
+    bounceTimer = 0;
 
     // 重置移动状态
     targetVelocityX = 0;
@@ -79,7 +87,7 @@ void GameEngine::update()
 
     // 计算游戏进行时间（ms）
     gameTime = static_cast<int>((currentTime - initTime) );
-    qDebug()<<"gametime"<<gameTime;
+
     // 限制deltaTime以避免极端情况
     if (deltaTime > 0.1) {
         deltaTime = 0.1;
@@ -88,24 +96,39 @@ void GameEngine::update()
     // 更新水平移动
     updateHorizontalMovement();
 
-    // 更新加速状态计时器
+    // 更新特殊状态计时器
     if (boostActive) {
         boostTimer -= deltaTime * 60;
         if (boostTimer <= 0) {
             boostActive = false;
         }
     }
-    float bei=std::min(1.0+gameTime*1.0/100000,1.5);
-    qDebug()<<"bei"<<bei<<"gra"<<0.33 * deltaTime * 60*bei;
+
+    if (slowActive) {
+        slowTimer -= deltaTime * 60;
+        if (slowTimer <= 0) {
+            slowActive = false;
+        }
+    }
+
+    if (bounceActive) {
+        bounceTimer -= deltaTime * 60;
+        if (bounceTimer <= 0) {
+            bounceActive = false;
+        }
+    }
+
+    float bei = std::min(1.0 + gameTime * 1.0 / 500000+score/2000, 1.5);
+
     // 保存上一帧的平台状态
     bool wasOnPlatform = player->isOnPlatform();
     player->setOnPlatform(false);
 
     // 应用重力
-    player->applyGravity(0.33 * deltaTime * 60*bei);
+    player->applyGravity(0.33 * deltaTime * 60 * bei);
 
     // 平台自动上升
-    scrollOffset += platformScrollSpeed * deltaTime * 220*bei;
+    scrollOffset += platformScrollSpeed * deltaTime * 220 * bei;
 
     // 碰撞检测
     checkCollisions();
@@ -151,7 +174,6 @@ void GameEngine::update()
     checkGameOver();
 }
 
-
 void GameEngine::updateHorizontalMovement()
 {
     // 平滑加速和减速
@@ -159,24 +181,63 @@ void GameEngine::updateHorizontalMovement()
         // 加速
         if (currentVelocityX * targetVelocityX >= 0) {
             // 同方向加速
-            currentVelocityX += targetVelocityX * acceleration * deltaTime * 60;
+            float effectiveAcceleration = acceleration;
+
+            // 减速状态降低加速度
+            if (slowActive) {
+                effectiveAcceleration *= 0.5f;
+            }
+
+            // 加速状态增加加速度
+            if (boostActive) {
+                effectiveAcceleration *= 1.5f;
+            }
+
+            currentVelocityX += targetVelocityX * effectiveAcceleration * deltaTime * 60;
 
             // 限制最大速度
-            float maxSpeed = boostActive ? maxBoostSpeed : maxNormalSpeed;
+            float maxSpeed = maxNormalSpeed;
+            if (boostActive) maxSpeed = maxBoostSpeed;
+            if (slowActive) maxSpeed *= 0.6f; // 减速状态降低最大速度
+
             if (fabs(currentVelocityX) > maxSpeed) {
                 currentVelocityX = (currentVelocityX > 0) ? maxSpeed : -maxSpeed;
             }
         } else {
             // 反方向减速再加速
-            currentVelocityX += targetVelocityX * acceleration * 2 * deltaTime * 60;
+            float effectiveAcceleration = acceleration * 2;
+
+            // 减速状态降低加速度
+            if (slowActive) {
+                effectiveAcceleration *= 0.5f;
+            }
+
+            // 加速状态增加加速度
+            if (boostActive) {
+                effectiveAcceleration *= 1.5f;
+            }
+
+            currentVelocityX += targetVelocityX * effectiveAcceleration * deltaTime * 60;
         }
     } else {
         // 减速到停止
+        float effectiveDeceleration = deceleration;
+
+        // 减速状态增加减速度
+        if (slowActive) {
+            effectiveDeceleration *= 1.5f;
+        }
+
+        // 加速状态降低减速度
+        if (boostActive) {
+            effectiveDeceleration *= 0.5f;
+        }
+
         if (currentVelocityX > 0) {
-            currentVelocityX -= deceleration * deltaTime * 60;
+            currentVelocityX -= effectiveDeceleration * deltaTime * 60;
             if (currentVelocityX < 0) currentVelocityX = 0;
         } else if (currentVelocityX < 0) {
-            currentVelocityX += deceleration * deltaTime * 60;
+            currentVelocityX += effectiveDeceleration * deltaTime * 60;
             if (currentVelocityX > 0) currentVelocityX = 0;
         }
     }
@@ -186,6 +247,7 @@ void GameEngine::updateHorizontalMovement()
         player->move(currentVelocityX * deltaTime * 60, 0, width);
     }
 }
+
 void GameEngine::generateInitialPlatforms()
 {
     // 在玩家脚下生成一个平台
@@ -246,28 +308,52 @@ void GameEngine::addPlatformToBatch(int y)
         averageX = width / 2;
     }
 
-    // 决定平台类型（红色平台概率）
-    int redProbability = std::min(score / 80, 10);
-    Platform::PlatformType type = (QRandomGenerator::global()->bounded(100) < redProbability) ?
-                                      Platform::BOOST : Platform::NORMAL;
+    // 决定平台类型（特殊平台概率）
+    int baseProbability = 1; // 基础概率5%
+    int redProbability = baseProbability + std::min(score / 80, 10);    // 最大15%
+    int blueProbability = baseProbability + std::min(score / 80, 20);   // 最大25%
+    int greenProbability = baseProbability + std::min(score / 100, 15);  // 最大20%
 
-    // 如果是红色平台，宽度略窄
+    int randValue = QRandomGenerator::global()->bounded(100);
+    Platform::PlatformType type = Platform::NORMAL;
+
+    qDebug() << "Platform generation - randValue:" << randValue
+             << "redProb:" << redProbability
+             << "blueProb:" << blueProbability
+             << "greenProb:" << greenProbability;
+
+    if (randValue < redProbability) {
+        type = Platform::BOOST;
+        qDebug() << "生成红色平台";
+    } else if (randValue < redProbability + blueProbability) {
+        type = Platform::SLOW;
+        qDebug() << "生成蓝色平台";
+    } else if (randValue < redProbability + blueProbability + greenProbability) {
+        type = Platform::BOUNCE;
+        qDebug() << "生成青色平台";
+    } else {
+        qDebug() << "生成普通平台";
+    }
+
+    // 特殊平台宽度调整
     if (type == Platform::BOOST) {
-        platformWidthToUse = 60+QRandomGenerator::global()->bounded(100)/10;
+        platformWidthToUse = 60 + QRandomGenerator::global()->bounded(100)/10;
+    } else if (type == Platform::SLOW || type == Platform::BOUNCE) {
+        platformWidthToUse = 70 + QRandomGenerator::global()->bounded(60)/10;
     }
 
     // 决定是否生成两个并排的平台（20%概率）
     if (QRandomGenerator::global()->bounded(100) < 20) {
         // 生成两个宽度为50的平台
-        int gap=std::abs(averageX-200)/2+3 ;
-        qDebug()<<"gap"<<gap;
+        int gap = std::abs(averageX-200)/2 + 3;
+
         // 根据平均位置决定倾向哪一侧
         bool generateOnRight = averageX < 200;
 
         if (generateOnRight) {
             // 倾向于右侧
-            if(QRandomGenerator::global()->bounded(100) < 60)
-                gap=0;
+            if(QRandomGenerator::global()->bounded(100) < 50)
+                gap = 0;
             int x1 = QRandomGenerator::global()->bounded(width/2 - 50 - gap);
             int x2 = width/2 + gap + QRandomGenerator::global()->bounded(width/2 - 50 - gap);
 
@@ -286,7 +372,7 @@ void GameEngine::addPlatformToBatch(int y)
         } else {
             // 倾向于左侧
             if(QRandomGenerator::global()->bounded(100) < 40)
-                gap=0;
+                gap = 0;
             int x1 = QRandomGenerator::global()->bounded(width/2 - 50 - gap);
             int x2 = width/2 + gap + QRandomGenerator::global()->bounded(width/2 - 50 - gap);
 
@@ -305,13 +391,11 @@ void GameEngine::addPlatformToBatch(int y)
         }
     } else {
         // 生成单个平台
-
-        // 根据平均位置决定倾向哪一侧
         bool generateOnRight = averageX < width / 2;
 
         if (generateOnRight) {
             // 倾向于右侧（屏幕右半部分）
-            newX = width/2 + QRandomGenerator::global()->bounded(width/2 - platformWidthToUse - 20) +25;
+            newX = width/2 + QRandomGenerator::global()->bounded(width/2 - platformWidthToUse - 20) - 20;
         } else {
             // 倾向于左侧（屏幕左半部分）
             newX = QRandomGenerator::global()->bounded(width/2 - platformWidthToUse - 20) + 10;
@@ -331,10 +415,6 @@ void GameEngine::addPlatformToBatch(int y)
     if (recentPlatformXs.size() > recentPlatformCount) {
         recentPlatformXs.removeFirst();
     }
-
-    qDebug() << "添加到批次，Y坐标:" << y << "屏幕Y:" << (y - scrollOffset)
-             << "平均X:" << averageX << "倾向:" << (averageX < width / 2 ? "右侧" : "左侧")
-             << "偏移" << scrollOffset;
 }
 
 void GameEngine::draw(QPainter &painter, bool showDebugInfo)
@@ -344,12 +424,25 @@ void GameEngine::draw(QPainter &painter, bool showDebugInfo)
     for (Platform *platform : platforms) {
         int platformScreenY = platform->getY() - scrollOffset;
         if (platformScreenY > -platformHeight && platformScreenY < height) {
-            // 正常绘制已进入屏幕的平台
-            if (platform->getType() == Platform::BOOST) {
+            // 根据平台类型设置颜色
+            switch(platform->getType()) {
+            case Platform::BOUNCE:
+                painter.setBrush(QColor(20, 250, 250)); // 青色
+                qDebug() << "Drawing BOUNCE platform at y:" << platformScreenY;
+                break;
+            case Platform::BOOST:
                 painter.setBrush(Qt::red);
-            } else {
+                qDebug() << "Drawing BOOST platform at y:" << platformScreenY;
+                break;
+            case Platform::SLOW:
+                painter.setBrush(Qt::blue);
+                qDebug() << "Drawing SLOW platform at y:" << platformScreenY;
+                break;
+            default:
                 painter.setBrush(QColor(100, 200, 100));
+                break;
             }
+
             painter.drawRect(platform->getX(), platformScreenY, platform->getWidth(), platform->getHeight());
 
             // 调试：显示平台碰撞区域
@@ -367,7 +460,26 @@ void GameEngine::draw(QPainter &painter, bool showDebugInfo)
         int platformScreenY = platform->getY() - scrollOffset;
         if (platformScreenY > -platformHeight && platformScreenY < height) {
             // 半透明绘制批次中的平台
-            QColor platformColor = (platform->getType() == Platform::BOOST) ? Qt::red : QColor(100, 200, 100);
+            QColor platformColor;
+
+            switch(platform->getType()) {
+            case Platform::BOOST:
+                platformColor = Qt::red;
+                qDebug() << "Drawing batch BOOST platform at y:" << platformScreenY;
+                break;
+            case Platform::SLOW:
+                platformColor = Qt::blue;
+                qDebug() << "Drawing batch SLOW platform at y:" << platformScreenY;
+                break;
+            case Platform::BOUNCE:
+                platformColor = QColor(20, 250, 250); // 青色
+                qDebug() << "Drawing batch BOUNCE platform at y:" << platformScreenY;
+                break;
+            default:
+                platformColor = QColor(100, 200, 100);
+                break;
+            }
+
             platformColor.setAlpha(128); // 半透明
             painter.setBrush(platformColor);
             painter.setPen(Qt::black);
@@ -386,7 +498,7 @@ void GameEngine::draw(QPainter &painter, bool showDebugInfo)
     // 绘制玩家
     player->draw(painter, scrollOffset);
 
-    // 如果加速状态激活，显示特效
+    // 如果特殊状态激活，显示特效
     if (boostActive) {
         painter.setBrush(QColor(255, 100, 100, 100));
         painter.setPen(Qt::NoPen);
@@ -396,18 +508,39 @@ void GameEngine::draw(QPainter &painter, bool showDebugInfo)
                             player->getWidth() + 10,
                             player->getHeight() + 10);
     }
+
+    if (slowActive) {
+        painter.setBrush(QColor(100, 100, 255, 100));
+        painter.setPen(Qt::NoPen);
+        int playerScreenY = player->getY() - scrollOffset;
+        painter.drawRect(player->getX() - player->getWidth()/2 - 5,
+                         playerScreenY - player->getHeight()/2 - 5,
+                         player->getWidth() + 10,
+                         player->getHeight() + 10);
+    }
+
+    if (bounceActive) {
+        painter.setBrush(QColor(100, 255, 100, 100));
+        painter.setPen(Qt::NoPen);
+        int playerScreenY = player->getY() - scrollOffset;
+        QPointF points[4] = {
+            QPointF(player->getX(), playerScreenY - player->getHeight()/2 - 8),
+            QPointF(player->getX() - player->getWidth()/2 - 5, playerScreenY + player->getHeight()/2 + 5),
+            QPointF(player->getX() + player->getWidth()/2 + 5, playerScreenY + player->getHeight()/2 + 5),
+            QPointF(player->getX(), playerScreenY - player->getHeight()/2 - 8)
+        };
+        painter.drawPolygon(points, 4);
+    }
 }
 
 void GameEngine::movePlayerLeft()
 {
-    targetVelocityX = boostActive ? -1.2 : -0.5;
-    qDebug()<<targetVelocityX;
+    targetVelocityX = -0.5;
 }
 
 void GameEngine::movePlayerRight()
 {
-    targetVelocityX = boostActive ? 1.2 : 0.5;
-    qDebug()<<targetVelocityX;
+    targetVelocityX = 0.5;
 }
 
 void GameEngine::stopPlayerMovement()
@@ -418,7 +551,14 @@ void GameEngine::stopPlayerMovement()
 void GameEngine::jumpPlayer()
 {
     if (player->isOnPlatform() && !player->isJumping()) {
-        player->jump(-12 * deltaTime * 60);
+        double jumpVelocity = -12 * deltaTime * 60;
+
+        // 高跳状态增加跳跃高度
+        if (bounceActive) {
+            jumpVelocity *= 1.4; // 增加80%的跳跃高度
+        }
+
+        player->jump(jumpVelocity);
     }
 }
 
@@ -450,10 +590,23 @@ void GameEngine::checkCollisions()
                 score += 10;
             }
 
-            // 检查是否是加速平台
-            if (platform->getType() == Platform::BOOST) {
+            // 检查平台类型并应用效果
+            switch(platform->getType()) {
+            case Platform::BOOST:
                 boostActive = true;
-                boostTimer = 80;
+                boostTimer = 200;
+                break;
+            case Platform::SLOW:
+                slowActive = true;
+                slowTimer = 200;
+                break;
+            case Platform::BOUNCE:
+                bounceActive = true;
+                bounceTimer = 200;
+                break;
+            default:
+                // 普通平台无特殊效果
+                break;
             }
 
             break;
@@ -486,10 +639,23 @@ void GameEngine::checkCollisions()
                 score += 10;
             }
 
-            // 检查是否是加速平台
-            if (platform->getType() == Platform::BOOST) {
+            // 检查平台类型并应用效果
+            switch(platform->getType()) {
+            case Platform::BOOST:
                 boostActive = true;
-                boostTimer = 300;
+                boostTimer = 200;
+                break;
+            case Platform::SLOW:
+                slowActive = true;
+                slowTimer = 200;
+                break;
+            case Platform::BOUNCE:
+                bounceActive = true;
+                bounceTimer = 200;
+                break;
+            default:
+                // 普通平台无特殊效果
+                break;
             }
 
             // 将平台从批次移动到主列表
@@ -552,4 +718,6 @@ int GameEngine::getPlatformCount() const { return platforms.size() + platformBat
 double GameEngine::getPlayerY() const { return player->getY(); }
 int GameEngine::getPlayerScreenY() const { return player->getY() - scrollOffset; }
 bool GameEngine::isBoostActive() const { return boostActive; }
+bool GameEngine::isSlowActive() const { return slowActive; }
+bool GameEngine::isBounceActive() const { return bounceActive; }
 int GameEngine::getGameTime() const { return gameTime; }

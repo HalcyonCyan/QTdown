@@ -1,3 +1,4 @@
+// gameengine.h
 #ifndef GAMEENGINE_H
 #define GAMEENGINE_H
 
@@ -33,6 +34,8 @@ public:
     double getPlayerY() const;
     int getPlayerScreenY() const;
     bool isBoostActive() const;
+    bool isSlowActive() const;      // 新增：是否处于减速状态
+    bool isBounceActive() const;    // 新增：是否处于高跳状态
     int getGameTime() const; // 新增：获取游戏时间
 
 private:
@@ -66,9 +69,13 @@ private:
     int batchThreshold;
     const int recentPlatformCount = 5; // 记录最近平台位置的数量
 
-    // 加速状态
+    // 特殊状态
     bool boostActive;
     int boostTimer;
+    bool slowActive;     // 新增：减速状态
+    int slowTimer;       // 新增：减速计时器
+    bool bounceActive;   // 新增：高跳状态
+    int bounceTimer;     // 新增：高跳计时器
 
     // 平滑移动相关变量
     qint64 initTime;

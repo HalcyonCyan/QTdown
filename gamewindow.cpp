@@ -137,15 +137,29 @@ void GameWindow::updateGame()
     update(); // 触发重绘
 }
 
+
 void GameWindow::drawScore(QPainter &painter)
 {
     painter.setPen(Qt::black);
     painter.setFont(QFont("Arial", 16));
     painter.drawText(10, 30, QString(tr("Score: %1")).arg(gameEngine->getScore()));
 
+    int yOffset = 60;
     if (gameEngine->isBoostActive()) {
         painter.setPen(Qt::red);
-        painter.drawText(10, 60, tr("Boost Active!"));
+        painter.drawText(10, yOffset, tr("Boost Active!"));
+        yOffset += 30;
+    }
+
+    if (gameEngine->isSlowActive()) {
+        painter.setPen(Qt::blue);
+        painter.drawText(10, yOffset, tr("Slow Active!"));
+        yOffset += 30;
+    }
+
+    if (gameEngine->isBounceActive()) {
+        painter.setPen(Qt::green);
+        painter.drawText(10, yOffset, tr("Bounce Active!"));
     }
 }
 

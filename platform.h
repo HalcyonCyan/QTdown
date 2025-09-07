@@ -1,3 +1,4 @@
+// platform.h
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
@@ -8,7 +9,9 @@ class Platform
 public:
     enum PlatformType {
         NORMAL,
-        BOOST  // 红色加速平台
+        BOOST,  // 红色加速平台
+        SLOW,   // 蓝色减速平台
+        BOUNCE  // 绿色高跳平台
     };
 
     Platform(int x, int y, int width, int height, bool passed = false, PlatformType type = NORMAL);
