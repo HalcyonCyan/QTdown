@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v3
 
     - name: Setup Python
@@ -24,19 +24,15 @@ jobs:
         python3 -m pip install --upgrade pip
         python3 -m pip install aqtinstall
 
-    - name: Install Qt6
+    - name: Install Qt6 + QtTools + LinguistTools
       run: |
-        python3 -m aqt list-qt linux desktop  # 查看可用版本
         python3 -m aqt install-qt linux desktop 6.6.0 linux-g++-64 \
-          --modules qtbase qttools linguist \
-          --outputdir $HOME/Qt \
-          --autodesktop
+          --modules qtbase qttools qttranslations \
+          --outputdir $HOME/Qt --autodesktop
         echo "Qt installed in $HOME/Qt/6.6.0/gcc_64"
 
     - name: Set Qt environment
       run: |
-        export PATH=$HOME/Qt/6.6.0/gcc_64/bin:$PATH
-        export CMAKE_PREFIX_PATH=$HOME/Qt/6.6.0/gcc_64/lib/cmake
         echo "PATH=$HOME/Qt/6.6.0/gcc_64/bin:$PATH" >> $GITHUB_ENV
         echo "CMAKE_PREFIX_PATH=$HOME/Qt/6.6.0/gcc_64/lib/cmake" >> $GITHUB_ENV
 
@@ -46,9 +42,7 @@ jobs:
         lrelease translations/myapp.ts -qm translations/myapp.qm
 
     - name: Configure CMake
-      run: |
-        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
     - name: Build Project
-      run: |
-        cmake --build build --config Release
+      run: cmake --build build --config Release
