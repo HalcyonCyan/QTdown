@@ -2,9 +2,9 @@ name: Build Qt6 C++ Project
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
 
 jobs:
   build:
@@ -14,41 +14,41 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Python
+    - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.x
+        python-version: 3.13
 
     - name: Install aqtinstall
-      run: python3 -m pip install --upgrade pip aqtinstall
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m pip install aqtinstall
 
     - name: Install Qt6
       run: |
-        python3 -m aqtinstall install-qt linux desktop 6.6.0 linux-g++-64 \
+        python3 -m aqt list-qt linux desktop  # 查看可用版本
+        python3 -m aqt install-qt linux desktop 6.6.0 linux-g++-64 \
           --modules qtbase qttools linguist \
           --outputdir $HOME/Qt \
           --autodesktop
+        echo "Qt installed in $HOME/Qt/6.6.0/gcc_64"
 
-    - name: Show Qt version
+    - name: Set Qt environment
       run: |
-        $HOME/Qt/6.6.0/gcc_64/bin/qmake --version
-        $HOME/Qt/6.6.0/gcc_64/bin/lupdate --version
-        $HOME/Qt/6.6.0/gcc_64/bin/lrelease --version
+        export PATH=$HOME/Qt/6.6.0/gcc_64/bin:$PATH
+        export CMAKE_PREFIX_PATH=$HOME/Qt/6.6.0/gcc_64/lib/cmake
+        echo "PATH=$HOME/Qt/6.6.0/gcc_64/bin:$PATH" >> $GITHUB_ENV
+        echo "CMAKE_PREFIX_PATH=$HOME/Qt/6.6.0/gcc_64/lib/cmake" >> $GITHUB_ENV
 
-    - name: Update translations
+    - name: Generate .qm translation files
       run: |
-        $HOME/Qt/6.6.0/gcc_64/bin/lupdate . -recursive -ts translations/app.ts
-        $HOME/Qt/6.6.0/gcc_64/bin/lrelease translations/app.ts -qm translations/app.qm
+        lupdate . -recursive -ts translations/myapp.ts
+        lrelease translations/myapp.ts -qm translations/myapp.qm
 
-    - name: Build project
+    - name: Configure CMake
       run: |
-        mkdir -p build
-        cd build
-        cmake .. -DCMAKE_PREFIX_PATH=$HOME/Qt/6.6.0/gcc_64 -DCMAKE_BUILD_TYPE=Release
-        cmake --build . --parallel
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: qt-build
-        path: build/
+    - name: Build Project
+      run: |
+        cmake --build build --config Release
