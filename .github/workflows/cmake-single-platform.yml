@@ -9,52 +9,34 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      QT_VERSION: "6.6.0"
-      QT_INSTALL_DIR: $HOME/Qt6
 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v3
 
     # 安装依赖工具
-    - name: Install dependencies
+    - name: Install build dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y \
-          wget perl tar gzip build-essential libgl1-mesa-dev
+        sudo apt-get install -y build-essential cmake libgl1-mesa-dev
 
-    # 下载官方 Qt 在线安装器
-    - name: Download Qt Installer
-      run: |
-        wget https://download.qt.io/official_releases/online_installers/qt-unified-linux-x64-online.run -O qt-installer.run
-        chmod +x qt-installer.run
+    # 使用 qt-actions/setup-qt 安装 Qt6
+    - name: Setup Qt6
+      uses: qt-actions/setup-qt@v3
+      with:
+        version: '6.6.0'
+        arch: 'gcc_64'
+        modules: 'qtbase,qttools,linguisttools' # 包含 LinguistTools
+        host: 'linux'
 
-    # 安装 Qt6 + LinguistTools 非交互式安装
-    - name: Install Qt6
+    # 查看 Qt 版本
+    - name: Check Qt version
       run: |
-        mkdir -p $QT_INSTALL_DIR
-        echo "Installing Qt $QT_VERSION to $QT_INSTALL_DIR"
-        ./qt-installer.run --script <<'EOF'
-        var installer = new Installer();
-        installer.setInstallDir("$HOME/Qt6");
-        installer.addRepository("qt6");
-        installer.selectComponent("qt.qt6.$(QT_VERSION).gcc_64");
-        installer.selectComponent("qt.qt6.$(QT_VERSION).tools");
-        installer.selectComponent("qt.qt6.$(QT_VERSION).linguisttools");
-        installer.install();
-        EOF
-
-    # 设置 Qt 环境
-    - name: Configure Qt environment
-      run: |
-        export PATH="$QT_INSTALL_DIR/$(QT_VERSION)/gcc_64/bin:$PATH"
-        echo "Qt path: $QT_INSTALL_DIR/$(QT_VERSION)/gcc_64/bin"
         qmake --version
         lupdate --version
         lrelease --version
 
-    # 生成语言文件
+    # 更新翻译文件并生成 .qm
     - name: Update translations
       run: |
         lupdate . -recursive -ts translations/app.ts
@@ -65,11 +47,11 @@ jobs:
       run: |
         mkdir -p build
         cd build
-        cmake .. -DCMAKE_PREFIX_PATH="$QT_INSTALL_DIR/$(QT_VERSION)/gcc_64" -DCMAKE_BUILD_TYPE=Release
+        cmake .. -DCMAKE_PREFIX_PATH=$HOME/Qt/6.6.0/gcc_64 -DCMAKE_BUILD_TYPE=Release
         cmake --build . --parallel
 
-    # 可选：上传构建产物
-    - name: Upload build artifacts
+    # 上传构建产物
+    - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: my-qt-app
