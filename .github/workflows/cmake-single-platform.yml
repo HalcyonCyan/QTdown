@@ -14,20 +14,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # 安装依赖工具
-    - name: Install build dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential cmake libgl1-mesa-dev
-
-    # 使用 qt-actions/setup-qt 安装 Qt6
-    - name: Setup Qt6
-      uses: qt-actions/setup-qt@v3
+    # 安装 Qt6 和 LinguistTools
+    - name: Install Qt6
+      uses: jurplel/install-qt-action@v4
       with:
         version: '6.6.0'
-        arch: 'gcc_64'
-        modules: 'qtbase,qttools,linguisttools' # 包含 LinguistTools
-        host: 'linux'
+        target: 'desktop'
+        arch: 'linux-g++-64'
+        modules: 'qtbase qttools linguisttools'
+        install-deps: true
 
     # 查看 Qt 版本
     - name: Check Qt version
@@ -42,7 +37,7 @@ jobs:
         lupdate . -recursive -ts translations/app.ts
         lrelease translations/app.ts -qm translations/app.qm
 
-    # 配置和构建
+    # 配置和构建项目
     - name: Build project
       run: |
         mkdir -p build
@@ -51,7 +46,7 @@ jobs:
         cmake --build . --parallel
 
     # 上传构建产物
-    - name: Upload artifacts
+    - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: my-qt-app
