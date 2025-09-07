@@ -310,9 +310,9 @@ void GameEngine::addPlatformToBatch(int y)
 
     // 决定平台类型（特殊平台概率）
     int baseProbability = 1; // 基础概率5%
-    int redProbability = baseProbability + std::min(score / 80, 10);    // 最大15%
-    int blueProbability = baseProbability + std::min(score / 80, 20);   // 最大25%
-    int greenProbability = baseProbability + std::min(score / 100, 15);  // 最大20%
+    int redProbability = baseProbability + std::min(score / 80, 7);    // 最大15%
+    int blueProbability = baseProbability + std::min(score / 80, 12);   // 最大25%
+    int greenProbability = std::min(score / 110, 7);  // 最大20%
 
     int randValue = QRandomGenerator::global()->bounded(100);
     Platform::PlatformType type = Platform::NORMAL;
