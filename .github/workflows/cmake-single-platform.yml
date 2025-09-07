@@ -1,80 +1,76 @@
-name: Qt6 C++ Build with LinguistTools
+name: Build Qt C++ Project
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     env:
-      QT_INSTALL_DIR: ${{ runner.temp }}/Qt6
       QT_VERSION: "6.6.0"
-      QT_COMPONENTS: "qtbase,qttools,linguisttools"
+      QT_INSTALL_DIR: $HOME/Qt6
 
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install system dependencies
+    # 安装依赖工具
+    - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y \
-          wget \
-          perl \
-          libxkbcommon-x11-0 \
-          libxcb-xinerama0 \
-          libxcb-xinput0 \
-          libxcb-xfixes0 \
-          libxcb-icccm4 \
-          libxcb-image0 \
-          libxcb-keysyms1 \
-          libxcb-randr0 \
-          libxcb-render-util0 \
-          libxcb-shape0 \
-          libxcb-shm0 \
-          libxcb-sync1 \
-          libx11-xcb1 \
-          libglu1-mesa \
-          build-essential \
-          cmake \
-          ninja-build
+          wget perl tar gzip build-essential libgl1-mesa-dev
 
-    - name: Download Qt installer
+    # 下载官方 Qt 在线安装器
+    - name: Download Qt Installer
       run: |
-        wget https://download.qt.io/official_releases/qt/${{ env.QT_VERSION }}/${{ env.QT_VERSION }}/qt-opensource-linux-x64-${{ env.QT_VERSION }}.run -O qt-installer.run
+        wget https://download.qt.io/official_releases/online_installers/qt-unified-linux-x64-online.run -O qt-installer.run
         chmod +x qt-installer.run
 
-    - name: Install Qt non-interactively
+    # 安装 Qt6 + LinguistTools 非交互式安装
+    - name: Install Qt6
       run: |
-        sudo QT_INSTALL_DIR=${{ env.QT_INSTALL_DIR }} QT_COMPONENT=${{ env.QT_COMPONENTS }} ./qt-installer.run --script qt-install-noninteractive.qs
+        mkdir -p $QT_INSTALL_DIR
+        echo "Installing Qt $QT_VERSION to $QT_INSTALL_DIR"
+        ./qt-installer.run --script <<'EOF'
+        var installer = new Installer();
+        installer.setInstallDir("$HOME/Qt6");
+        installer.addRepository("qt6");
+        installer.selectComponent("qt.qt6.$(QT_VERSION).gcc_64");
+        installer.selectComponent("qt.qt6.$(QT_VERSION).tools");
+        installer.selectComponent("qt.qt6.$(QT_VERSION).linguisttools");
+        installer.install();
+        EOF
 
-    - name: Add Qt binaries to PATH
-      run: echo "${{ env.QT_INSTALL_DIR }}/6.6.0/gcc_64/bin" >> $GITHUB_PATH
-
-    - name: Run lupdate (generate/update .ts files)
+    # 设置 Qt 环境
+    - name: Configure Qt environment
       run: |
-        mkdir -p translations
-        lupdate . -recursive -ts translations/*.ts || true
+        export PATH="$QT_INSTALL_DIR/$(QT_VERSION)/gcc_64/bin:$PATH"
+        echo "Qt path: $QT_INSTALL_DIR/$(QT_VERSION)/gcc_64/bin"
+        qmake --version
+        lupdate --version
+        lrelease --version
 
-    - name: Run lrelease (generate .qm files)
+    # 生成语言文件
+    - name: Update translations
       run: |
-        for tsfile in translations/*.ts; do
-          lrelease "$tsfile" -qm "${tsfile%.ts}.qm"
-        done
+        lupdate . -recursive -ts translations/app.ts
+        lrelease translations/app.ts -qm translations/app.qm
 
-    - name: Configure CMake
+    # 配置和构建
+    - name: Build project
       run: |
         mkdir -p build
         cd build
-        cmake .. -DCMAKE_PREFIX_PATH=${{ env.QT_INSTALL_DIR }} -DCMAKE_BUILD_TYPE=Release -G Ninja
+        cmake .. -DCMAKE_PREFIX_PATH="$QT_INSTALL_DIR/$(QT_VERSION)/gcc_64" -DCMAKE_BUILD_TYPE=Release
+        cmake --build . --parallel
 
-    - name: Build project
-      run: |
-        cd build
-        ninja
+    # 可选：上传构建产物
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: my-qt-app
+        path: build/
