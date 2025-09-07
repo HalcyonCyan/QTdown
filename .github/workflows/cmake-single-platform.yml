@@ -24,9 +24,9 @@ jobs:
 
     - name: Install Qt6
       run: |
-        python3 -m aqt install-qt linux desktop 6.6.0 linux-g++-64 \
-          --outputdir $HOME/Qt \
+        python3 -m aqtinstall install-qt linux desktop 6.6.0 linux-g++-64 \
           --modules qtbase qttools linguist \
+          --outputdir $HOME/Qt \
           --autodesktop
 
     - name: Show Qt version
