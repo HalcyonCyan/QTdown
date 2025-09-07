@@ -1,59 +1,80 @@
-name: Build Qt C++ Project
+name: Qt6 C++ Build with LinguistTools
 
 on:
   push:
     branches:
       - main
   pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     env:
-      QT_INSTALL_DIR: /opt/Qt6
-      QT_VERSION: 6.6.0
-      QT_COMPONENT: qt.qt6.660.gcc_64
+      QT_INSTALL_DIR: ${{ runner.temp }}/Qt6
+      QT_VERSION: "6.6.0"
+      QT_COMPONENTS: "qtbase,qttools,linguisttools"
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
-    - name: Install dependencies
+    - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y wget perl python3
+        sudo apt-get install -y \
+          wget \
+          perl \
+          libxkbcommon-x11-0 \
+          libxcb-xinerama0 \
+          libxcb-xinput0 \
+          libxcb-xfixes0 \
+          libxcb-icccm4 \
+          libxcb-image0 \
+          libxcb-keysyms1 \
+          libxcb-randr0 \
+          libxcb-render-util0 \
+          libxcb-shape0 \
+          libxcb-shm0 \
+          libxcb-sync1 \
+          libx11-xcb1 \
+          libglu1-mesa \
+          build-essential \
+          cmake \
+          ninja-build
 
-    - name: Download Qt Online Installer
+    - name: Download Qt installer
       run: |
-        wget https://download.qt.io/official_releases/online_installers/qt-online-installer-linux-x64-online.run -O qt-installer.run
+        wget https://download.qt.io/official_releases/qt/${{ env.QT_VERSION }}/${{ env.QT_VERSION }}/qt-opensource-linux-x64-${{ env.QT_VERSION }}.run -O qt-installer.run
         chmod +x qt-installer.run
 
-    - name: Create non-interactive installation script
+    - name: Install Qt non-interactively
       run: |
-        cat > qt-install-noninteractive.qs <<'EOF'
-        var installer = gui.currentInstaller();
-        installer.setTargetDirectory(installer.value("QT_INSTALL_DIR"));
-        installer.selectComponent(installer.value("QT_COMPONENT"));
-        installer.performInstallation();
-        installer.autoRejectMessageBoxes();
-        EOF
+        sudo QT_INSTALL_DIR=${{ env.QT_INSTALL_DIR }} QT_COMPONENT=${{ env.QT_COMPONENTS }} ./qt-installer.run --script qt-install-noninteractive.qs
 
-    - name: Install Qt6 non-interactively
+    - name: Add Qt binaries to PATH
+      run: echo "${{ env.QT_INSTALL_DIR }}/6.6.0/gcc_64/bin" >> $GITHUB_PATH
+
+    - name: Run lupdate (generate/update .ts files)
       run: |
-        sudo QT_INSTALL_DIR=$QT_INSTALL_DIR QT_COMPONENT=$QT_COMPONENT ./qt-installer.run --script qt-install-noninteractive.qs
+        mkdir -p translations
+        lupdate . -recursive -ts translations/*.ts || true
 
-    - name: Setup environment variables
+    - name: Run lrelease (generate .qm files)
       run: |
-        echo "$QT_INSTALL_DIR/$QT_VERSION/gcc_64/bin" >> $GITHUB_PATH
-        echo "$QT_INSTALL_DIR/$QT_VERSION/gcc_64/lib/cmake" >> $GITHUB_PATH
-        export Qt6_DIR=$QT_INSTALL_DIR/$QT_VERSION/gcc_64/lib/cmake/Qt6
-
-    - name: Create build directory
-      run: mkdir -p build
+        for tsfile in translations/*.ts; do
+          lrelease "$tsfile" -qm "${tsfile%.ts}.qm"
+        done
 
     - name: Configure CMake
-      run: cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DQt6_DIR=$QT_INSTALL_DIR/$QT_VERSION/gcc_64/lib/cmake/Qt6
+      run: |
+        mkdir -p build
+        cd build
+        cmake .. -DCMAKE_PREFIX_PATH=${{ env.QT_INSTALL_DIR }} -DCMAKE_BUILD_TYPE=Release -G Ninja
 
     - name: Build project
-      run: cmake --build build --config Release -- -j$(nproc)
+      run: |
+        cd build
+        ninja
