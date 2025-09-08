@@ -43,6 +43,7 @@ add_executable(DeepRock
     network.h
     leaderboard.cpp
     leaderboard.h
+    leaderboardwidget.h leaderboardwidget.cpp
 )
 
 # 链接Qt库

@@ -1,4 +1,3 @@
-// leaderboard.cpp
 #include "leaderboard.h"
 #include <QDebug>
 #include <algorithm>
@@ -36,6 +35,7 @@ bool Leaderboard::load()
         Account acc;
         acc.createAccount(
             obj["username"].toString(),
+            obj["password"].toString(),
             obj["gameId"].toString()
             );
         acc.setHighScore(obj["highScore"].toInt());
@@ -52,8 +52,9 @@ bool Leaderboard::save()
 
     for (const Account &acc : accounts) {
         QJsonObject obj;
-        obj["gameId"] = acc.getGameId();
+        obj["gameId"]   = acc.getGameId();
         obj["username"] = acc.getUsername();
+        obj["password"] = acc.getPassword();
         obj["highScore"] = acc.getHighScore();
         array.append(obj);
     }
@@ -73,10 +74,8 @@ bool Leaderboard::save()
 
 void Leaderboard::addAccount(const Account &account)
 {
-    // 检查是否已存在
     for (int i = 0; i < accounts.size(); i++) {
         if (accounts[i].getGameId() == account.getGameId()) {
-            // 更新已有账号
             if (account.getHighScore() > accounts[i].getHighScore()) {
                 accounts[i].setHighScore(account.getHighScore());
             }
@@ -85,14 +84,13 @@ void Leaderboard::addAccount(const Account &account)
         }
     }
 
-    // 添加新账号
     accounts.append(account);
     sort();
 }
 
 void Leaderboard::updateAccount(const Account &account)
 {
-    addAccount(account); // 复用addAccount的逻辑
+    addAccount(account);
 }
 
 void Leaderboard::mergeLeaderboard(const QList<Account> &otherLeaderboard)
@@ -120,10 +118,10 @@ int Leaderboard::getRank(const QString &gameId) const
 {
     for (int i = 0; i < accounts.size(); i++) {
         if (accounts[i].getGameId() == gameId) {
-            return i + 1; // 排名从1开始
+            return i + 1;
         }
     }
-    return -1; // 未找到
+    return -1;
 }
 
 void Leaderboard::sort()
@@ -134,8 +132,14 @@ void Leaderboard::sort()
               });
 }
 
+void Leaderboard::clear()
+{
+    accounts.clear();
+    QFile::remove("leaderboard.json");
+}
+
 Leaderboard* Leaderboard::instance()
 {
-    static Leaderboard instance;
-    return &instance;
+    static Leaderboard inst;
+    return &inst;
 }

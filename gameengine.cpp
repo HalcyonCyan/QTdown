@@ -119,7 +119,7 @@ void GameEngine::update()
     }
 
     float bei = std::min(1.0 + gameTime * 1.0 / 500000+score/2000, 1.5);
-
+    //float bei=1.5;
     // 保存上一帧的平台状态
     bool wasOnPlatform = player->isOnPlatform();
     player->setOnPlatform(false);

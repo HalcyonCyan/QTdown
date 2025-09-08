@@ -1,4 +1,3 @@
-// leaderboard.h
 #ifndef LEADERBOARD_H
 #define LEADERBOARD_H
 
@@ -26,6 +25,9 @@ public:
     int getRank(const QString &gameId) const;
 
     static Leaderboard* instance();
+
+    // 新增一个接口：清空排行榜
+    void clear();
 
 private:
     QList<Account> accounts;

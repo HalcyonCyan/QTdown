@@ -11,6 +11,7 @@
 #include <QLineEdit>
 #include <QDialogButtonBox>
 #include "leaderboard.h"
+#include "leaderboardwidget.h"
 
 #include <QTableWidget>
 #include <QHeaderView>
@@ -413,51 +414,70 @@ void MainWindow::showMultiplayerDialog()
     }
 }
 
-// mainwindow.cpp (只修改showLeaderboard函数)
-// mainwindow.cpp (只修改showLeaderboard函数)
+
 void MainWindow::showLeaderboard()
 {
     Leaderboard *lb = Leaderboard::instance();
-    QList<Account> topScores = lb->getTopScores(10);
+    QList<Account> topScores = lb->getTopScores(50); // 取前 50 名
 
     // 创建排行榜对话框
     QDialog dialog(this);
     dialog.setWindowTitle(tr("排行榜"));
-    dialog.setFixedSize(400, 400);
+    dialog.setFixedSize(500, 500);
 
     QVBoxLayout layout(&dialog);
 
-    // 创建表格
-    QTableWidget table(topScores.size(), 3, &dialog);
-    table.setHorizontalHeaderLabels(QStringList() << tr("排名") << tr("游戏名") << tr("分数"));
+    // 创建表格（4列：排名 / ID / 用户名 / 分数）
+    QTableWidget table(topScores.size(), 4, &dialog);
+    table.setHorizontalHeaderLabels(QStringList() << tr("排名") << tr("账号ID") << tr("用户名") << tr("分数"));
     table.horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     table.setEditTriggers(QAbstractItemView::NoEditTriggers);
     table.setSelectionBehavior(QAbstractItemView::SelectRows);
 
     // 填充表格数据
     for (int i = 0; i < topScores.size(); i++) {
-        QTableWidgetItem *rankItem = new QTableWidgetItem(QString::number(i + 1));
-        QTableWidgetItem *nameItem = new QTableWidgetItem(topScores[i].getUsername());
-        QTableWidgetItem *scoreItem = new QTableWidgetItem(QString::number(topScores[i].getHighScore()));
+        const Account &acc = topScores[i];
+
+        QTableWidgetItem *rankItem  = new QTableWidgetItem(QString::number(i + 1));
+        QTableWidgetItem *idItem    = new QTableWidgetItem(acc.getGameId());
+        QTableWidgetItem *nameItem  = new QTableWidgetItem(acc.getUsername());
+        QTableWidgetItem *scoreItem = new QTableWidgetItem(QString::number(acc.getHighScore()));
 
         rankItem->setTextAlignment(Qt::AlignCenter);
+        idItem->setTextAlignment(Qt::AlignCenter);
         nameItem->setTextAlignment(Qt::AlignCenter);
         scoreItem->setTextAlignment(Qt::AlignCenter);
 
         table.setItem(i, 0, rankItem);
-        table.setItem(i, 1, nameItem);
-        table.setItem(i, 2, scoreItem);
+        table.setItem(i, 1, idItem);
+        table.setItem(i, 2, nameItem);
+        table.setItem(i, 3, scoreItem);
     }
 
     layout.addWidget(&table);
 
-    // 添加关闭按钮
+    // === 按钮区域 ===
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+
+    QPushButton clearButton(tr("清空排行榜"), &dialog);
     QPushButton closeButton(tr("关闭"), &dialog);
+
+    buttonLayout->addWidget(&clearButton);
+    buttonLayout->addWidget(&closeButton);
+
+    layout.addLayout(buttonLayout);
+
+    // 绑定按钮
     connect(&closeButton, &QPushButton::clicked, &dialog, &QDialog::accept);
-    layout.addWidget(&closeButton);
+    connect(&clearButton, &QPushButton::clicked, [&]() {
+        lb->clear();
+        QMessageBox::information(&dialog, tr("提示"), tr("排行榜已清空！"));
+        dialog.accept(); // 关闭窗口
+    });
 
     dialog.exec();
 }
+
 void MainWindow::on_singlePlayerButton_clicked()
 {
     qDebug() << "Single-player button clicked";

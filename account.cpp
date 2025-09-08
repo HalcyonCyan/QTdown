@@ -1,4 +1,3 @@
-// account.cpp
 #include "account.h"
 #include <QDebug>
 
@@ -17,7 +16,6 @@ bool Account::createAccount(const QString &username, const QString &password, co
     this->gameId = gameId.isEmpty() ? generateRandomId() : gameId;
     this->highScore = 0;
 
-    // 确保 accounts 目录存在
     QDir dir("accounts");
     if (!dir.exists()) {
         if (!dir.mkpath(".")) {
@@ -26,11 +24,11 @@ bool Account::createAccount(const QString &username, const QString &password, co
         }
     }
 
-    // 检查账号是否已存在
+
     QFile file(getAccountFilePath());
     if (file.exists()) {
         qDebug() << "Account already exists:" << getAccountFilePath();
-        return false; // 账号已存在
+        return false;
     }
 
     return saveAccount();
@@ -65,7 +63,7 @@ bool Account::loadAccount(const QString &gameId)
 
 bool Account::saveAccount()
 {
-    // 确保 accounts 目录存在
+
     QDir dir("accounts");
     if (!dir.exists()) {
         if (!dir.mkpath(".")) {
