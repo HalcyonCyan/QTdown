@@ -84,6 +84,21 @@ QPushButton:pressed {
      </widget>
     </item>
     <item>
+     <widget class="QLabel" name="accountLabel">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>账号: Player\n最高分: 0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
      <spacer name="verticalSpacer_2">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -91,32 +106,32 @@ QPushButton:pressed {
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>40</height>
+        <height>20</height>
        </size>
       </property>
      </spacer>
     </item>
     <item>
-     <widget class="QPushButton" name="startButton">
+     <widget class="QPushButton" name="singlePlayerButton">
       <property name="font">
        <font>
         <pointsize>14</pointsize>
        </font>
       </property>
       <property name="text">
-       <string>Start Game</string>
+       <string>Single-player Game</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="restartButton">
+     <widget class="QPushButton" name="multiplayerButton">
       <property name="font">
        <font>
         <pointsize>14</pointsize>
        </font>
       </property>
       <property name="text">
-       <string>Restart</string>
+       <string>Multiplayer Game</string>
       </property>
      </widget>
     </item>
@@ -129,6 +144,18 @@ QPushButton:pressed {
       </property>
       <property name="text">
        <string>Settings</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="leaderboardButton">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Leaderboard</string>
       </property>
      </widget>
     </item>
@@ -152,7 +179,7 @@ QPushButton:pressed {
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>40</height>
+        <height>20</height>
        </size>
       </property>
      </spacer>

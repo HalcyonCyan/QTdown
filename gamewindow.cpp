@@ -39,6 +39,11 @@ void GameWindow::restartGame()
     gamePaused = false;
 }
 
+int GameWindow::getScore() const
+{
+    return gameEngine->getScore();
+}
+
 void GameWindow::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
@@ -112,7 +117,6 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 
-// 添加按键释放事件处理
 void GameWindow::keyReleaseEvent(QKeyEvent *event)
 {
     if (gamePaused || gameEngine->isGameOver()) {
@@ -134,9 +138,8 @@ void GameWindow::updateGame()
     } else {
         timer->stop();
     }
-    update(); // 触发重绘
+    update();
 }
-
 
 void GameWindow::drawScore(QPainter &painter)
 {

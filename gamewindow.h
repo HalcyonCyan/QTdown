@@ -16,6 +16,7 @@ public:
 
     void startGame();
     void restartGame();
+    int getScore() const;
 
 signals:
     void gameFinished();
@@ -23,7 +24,7 @@ signals:
 protected:
     void paintEvent(QPaintEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
-    void keyReleaseEvent(QKeyEvent *event) override; // 添加按键释放事件
+    void keyReleaseEvent(QKeyEvent *event) override;
 
 private slots:
     void updateGame();

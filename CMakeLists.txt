@@ -1,15 +1,24 @@
 cmake_minimum_required(VERSION 3.16)
 
+# 设置项目名称和版本
 project(DeepRock VERSION 1.0.0 LANGUAGES CXX)
 
+# 设置C++标准
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_AUTOMOC ON)
+# 自动处理UI、资源和MOC文件
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOMOC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets Core Gui LinguistTools)
+# 查找所需的Qt模块
+find_package(Qt6 REQUIRED COMPONENTS
+    Core
+    Gui
+    Widgets
+    Network  # 添加网络模块
+)
 
 # 添加可执行文件
 add_executable(DeepRock
@@ -26,31 +35,32 @@ add_executable(DeepRock
     player.h
     platform.cpp
     platform.h
-    mainwindow.ui
 
+    # 新增文件
+    account.cpp
+    account.h
+    network.cpp
+    network.h
+    leaderboard.cpp
+    leaderboard.h
 )
 
 # 链接Qt库
 target_link_libraries(DeepRock PRIVATE
-    Qt6::Widgets
     Qt6::Core
     Qt6::Gui
+    Qt6::Widgets
+    Qt6::Network  # 链接网络模块
 )
 
-# 包含当前目录
-target_include_directories(DeepRock PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+# 设置包含目录
+target_include_directories(DeepRock PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
 
-# 设置可执行文件的输出目录
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-# 复制资源文件到构建目录
-
-
-
-
-
-
-
-
-# 将翻译文件添加到资源
-target_sources(DeepRock PRIVATE ${QM_FILES})
+# 在Windows上设置子系统（如果是GUI应用程序）
+if(WIN32)
+    set_target_properties(DeepRock PROPERTIES
+        WIN32_EXECUTABLE TRUE
+    )
+endif()
