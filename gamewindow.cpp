@@ -4,20 +4,28 @@
 #include <QDebug>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QMessageBox>
 
-GameWindow::GameWindow(QWidget *parent)
-    : QWidget(parent), showDebugInfo(false), gamePaused(false)
+// 修改后的构造函数：支持多人模式和网络
+GameWindow::GameWindow(bool isMultiplayer, Network* network, QWidget *parent)
+    : QWidget(parent), showDebugInfo(false), gamePaused(false),
+    network(network), isMultiplayerMode(isMultiplayer)
 {
-    // 创建游戏引擎
-    gameEngine = new GameEngine(width(), height(), this);
+    // 创建游戏引擎，传递网络参数
+    gameEngine = new GameEngine(width(), height(), isMultiplayer, network, this);
 
     // 设置定时器
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &GameWindow::updateGame);
 
+    // 连接网络错误信号（如果是多人游戏）
+    if (isMultiplayerMode && network) {
+        connect(network, &Network::errorOccurred, this, &GameWindow::onNetworkError);
+    }
+
     // 设置窗口属性
     setFocusPolicy(Qt::StrongFocus);
-    setFixedSize(400, 500);
+    setFixedSize(640, 500);
 }
 
 GameWindow::~GameWindow()
@@ -98,8 +106,6 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         gameEngine->movePlayerRight();
         break;
     case Qt::Key_Space:
-        gameEngine->jumpPlayer();
-        break;
     case Qt::Key_Up:
         gameEngine->jumpPlayer();
         break;
@@ -114,6 +120,41 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_R:
         restartGame();
         break;
+    }
+}
+void GameWindow::setNetwork(Network* network, bool isHost)
+{
+    // 清理旧的网络连接
+    if (this->network) {
+        disconnect(this->network, &Network::playerPositionReceived,
+                   gameEngine, &GameEngine::onPlayerPositionReceived);
+        disconnect(this->network, &Network::gameStateReceived,
+                   gameEngine, &GameEngine::onGameStateReceived);
+        disconnect(this->network, &Network::scoreUpdateReceived,
+                   gameEngine, &GameEngine::onScoreUpdateReceived);
+        disconnect(this->network, &Network::errorOccurred,
+                   this, &GameWindow::onNetworkError);
+    }
+
+    // 设置新的网络对象
+    this->network = network;
+    this->isMultiplayerMode = isHost; // 或者 isMultiplayerMode = true;
+
+    // 重新连接信号和槽
+    if (network) {
+        connect(network, &Network::playerPositionReceived,
+                gameEngine, &GameEngine::onPlayerPositionReceived);
+        connect(network, &Network::gameStateReceived,
+                gameEngine, &GameEngine::onGameStateReceived);
+        connect(network, &Network::scoreUpdateReceived,
+                gameEngine, &GameEngine::onScoreUpdateReceived);
+        connect(network, &Network::errorOccurred,
+                this, &GameWindow::onNetworkError);
+    }
+
+    // 更新游戏引擎的网络状态
+    if (gameEngine) {
+        gameEngine->setNetwork(network, isHost);
     }
 }
 
@@ -203,4 +244,15 @@ void GameWindow::returnToMainMenu()
 void GameWindow::toggleDebugInfo()
 {
     showDebugInfo = !showDebugInfo;
+}
+
+// 新增：网络错误处理槽函数
+void GameWindow::onNetworkError(const QString &error)
+{
+    gamePaused = true;
+    timer->stop();
+
+    QMessageBox::warning(this, tr("网络错误"),
+                         tr("网络连接出现问题: %1").arg(error));
+    update();
 }

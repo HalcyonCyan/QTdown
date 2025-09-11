@@ -30,6 +30,7 @@ public:
     void setJumping(bool jumping);
     void setOnPlatform(bool onPlatform);
 
+
 private:
     double x;
     double y;

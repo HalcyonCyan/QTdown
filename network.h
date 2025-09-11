@@ -1,4 +1,3 @@
-// networkmanager.h
 #ifndef NETWORK_H
 #define NETWORK_H
 
@@ -38,6 +37,8 @@ public:
     void setCurrentAccount(const Account &account);
     Account getCurrentAccount() const;
 
+    QString errorString() const; // 添加此函数
+
 signals:
     void connected();
     void disconnected();
@@ -58,6 +59,7 @@ private:
     QTcpSocket *tcpSocket;
     bool isHost;
     Account currentAccount;
+    QString lastError; // 添加此变量
 
     void sendMessage(MessageType type, const QByteArray &data);
     void processMessage(const QByteArray &message);

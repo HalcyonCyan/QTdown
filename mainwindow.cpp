@@ -12,6 +12,7 @@
 #include <QDialogButtonBox>
 #include "leaderboard.h"
 #include "leaderboardwidget.h"
+#include "network.h" // 添加Network头文件
 
 #include <QTableWidget>
 #include <QHeaderView>
@@ -19,6 +20,7 @@
 #include <QDialog>
 #include <QVBoxLayout>
 #include <QPushButton>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -63,7 +65,7 @@ void MainWindow::showAccountDialog()
     dialog.setFixedSize(400, 300);  // 增加宽度和高度
 
     QVBoxLayout layout(&dialog);
-    layout.setSpacing(15); // 增加控件之间的间距
+    layout.setSpacing(15);
 
     // 显示当前账号信息 - 增加高度并设置自动换行
     QLabel infoLabel(&dialog);
@@ -139,6 +141,7 @@ void MainWindow::showAccountDialog()
 
     dialog.exec();
 }
+
 void MainWindow::registerAccount()
 {
     // 创建注册对话框 - 增加高度
@@ -229,7 +232,7 @@ void MainWindow::registerAccount()
 
         // 创建新账号
         Account newAccount;
-        if (newAccount.createAccount(username, password)) {
+        if (newAccount.createAccount(username, password, "default")) {
             currentAccount = newAccount;
             updateAccountDisplay();
             QMessageBox::information(&dialog, tr("成功"),
@@ -271,7 +274,7 @@ void MainWindow::changeAccount()
     passwordEdit.setPlaceholderText(tr("请输入密码"));
     passwordEdit.setEchoMode(QLineEdit::Password);
     passwordEdit.setMinimumHeight(30);
-    form.addRow(tr("密码:"), &passwordEdit);
+    form.addRow(tr("密码"), &passwordEdit);
 
     // 按钮 - 使用水平布局避免重叠
     QHBoxLayout buttonLayout;
@@ -342,6 +345,7 @@ void MainWindow::changeAccount()
     dialog.exec();
 }
 
+// 修改showMultiplayerDialog函数
 void MainWindow::showMultiplayerDialog()
 {
     // 显示多人游戏对话框
@@ -375,9 +379,18 @@ void MainWindow::showMultiplayerDialog()
                 );
 
             if (portOk) {
-                // 这里需要实现创建主机的逻辑
-                QMessageBox::information(this, tr("创建主机"),
-                                         tr("主机已创建在端口 %1").arg(port));
+                // 创建网络对象并启动主机
+                Network* network = new Network(this);
+                network->setCurrentAccount(currentAccount);
+
+                if (network->createHost(port)) {
+                    // 启动多人游戏
+                    startMultiplayerGame(network, true);
+                } else {
+                    QMessageBox::warning(this, tr("错误"),
+                                         tr("无法创建主机: %1").arg(network->errorString()));
+                    delete network;
+                }
             }
         } else {
             // 连接主机
@@ -405,15 +418,40 @@ void MainWindow::showMultiplayerDialog()
                     );
 
                 if (portOk) {
-                    // 这里需要实现连接主机的逻辑
-                    QMessageBox::information(this, tr("连接主机"),
-                                             tr("正在连接 %1:%2").arg(ip).arg(port));
+                    // 创建网络对象并连接
+                    Network* network = new Network(this);
+                    network->setCurrentAccount(currentAccount);
+
+                    if (network->connectToHost(ip, port)) {
+                        // 启动多人游戏
+                        startMultiplayerGame(network, false);
+                    } else {
+                        QMessageBox::warning(this, tr("错误"),
+                                             tr("无法连接到主机: %1").arg(network->errorString()));
+                        delete network;
+                    }
                 }
             }
         }
     }
 }
 
+// 添加启动多人游戏的函数
+void MainWindow::startMultiplayerGame(Network* network, bool isHost)
+{
+    if (!gameWindow) {
+        gameWindow = new GameWindow(isHost, network, nullptr);
+        connect(gameWindow, &GameWindow::gameFinished, this, &MainWindow::gameFinished);
+    } else {
+        // 如果已有游戏窗口，重新设置网络
+        gameWindow->setNetwork(network, isHost);
+    }
+
+    gameWindow->startGame();
+    gameWindow->show();
+    this->hide();
+    gameRunning = true;
+}
 
 void MainWindow::showLeaderboard()
 {
@@ -484,7 +522,7 @@ void MainWindow::on_singlePlayerButton_clicked()
 
     if (!gameWindow) {
         qDebug() << "Creating new GameWindow";
-        gameWindow = new GameWindow(nullptr);
+        gameWindow = new GameWindow(false, nullptr); // 修改为false
         connect(gameWindow, &GameWindow::gameFinished, this, &MainWindow::gameFinished);
     }
 

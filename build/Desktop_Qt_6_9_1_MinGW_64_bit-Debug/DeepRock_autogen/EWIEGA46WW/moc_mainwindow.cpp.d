@@ -3,8 +3,10 @@ C:/Users/10169/Desktop/man100/deeprock/build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug
   C:/Users/10169/Desktop/man100/deeprock/account.h \
   C:/Users/10169/Desktop/man100/deeprock/gameengine.h \
   C:/Users/10169/Desktop/man100/deeprock/gamewindow.h \
+  C:/Users/10169/Desktop/man100/deeprock/network.h \
   C:/Users/10169/Desktop/man100/deeprock/platform.h \
   C:/Users/10169/Desktop/man100/deeprock/player.h \
+  D:/qt/6.9.1/mingw_64/include/QtCore/QDataStream \
   D:/qt/6.9.1/mingw_64/include/QtCore/QDateTime \
   D:/qt/6.9.1/mingw_64/include/QtCore/QDebug \
   D:/qt/6.9.1/mingw_64/include/QtCore/QDir \
@@ -201,6 +203,16 @@ C:/Users/10169/Desktop/man100/deeprock/build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug
   D:/qt/6.9.1/mingw_64/include/QtGui/qtransform.h \
   D:/qt/6.9.1/mingw_64/include/QtGui/qwindowdefs.h \
   D:/qt/6.9.1/mingw_64/include/QtGui/qwindowdefs_win.h \
+  D:/qt/6.9.1/mingw_64/include/QtNetwork/QHostAddress \
+  D:/qt/6.9.1/mingw_64/include/QtNetwork/QTcpServer \
+  D:/qt/6.9.1/mingw_64/include/QtNetwork/QTcpSocket \
+  D:/qt/6.9.1/mingw_64/include/QtNetwork/qabstractsocket.h \
+  D:/qt/6.9.1/mingw_64/include/QtNetwork/qhostaddress.h \
+  D:/qt/6.9.1/mingw_64/include/QtNetwork/qtcpserver.h \
+  D:/qt/6.9.1/mingw_64/include/QtNetwork/qtcpsocket.h \
+  D:/qt/6.9.1/mingw_64/include/QtNetwork/qtnetwork-config.h \
+  D:/qt/6.9.1/mingw_64/include/QtNetwork/qtnetworkexports.h \
+  D:/qt/6.9.1/mingw_64/include/QtNetwork/qtnetworkglobal.h \
   D:/qt/6.9.1/mingw_64/include/QtWidgets/QMainWindow \
   D:/qt/6.9.1/mingw_64/include/QtWidgets/QWidget \
   D:/qt/6.9.1/mingw_64/include/QtWidgets/qmainwindow.h \

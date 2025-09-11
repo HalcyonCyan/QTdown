@@ -7,25 +7,35 @@
 #include <QDateTime>
 #include <cmath>
 
-GameEngine::GameEngine(int width, int height, QObject *parent)
-    : QObject(parent), width(400), height(500), score(0), scrollOffset(0), gameOver(false),
+GameEngine::GameEngine(int width, int height, bool isMultiplayer, Network* network, QObject *parent)
+    : QObject(parent), width(width), height(height), score(0), scrollOffset(0), gameOver(false),
     boostActive(false), boostTimer(0), slowActive(false), slowTimer(0),
     bounceActive(false), bounceTimer(0), initTime(0), lastUpdateTime(0), deltaTime(0),
-    targetVelocityX(0), currentVelocityX(0), gameTime(0)
+    targetVelocityX(0), currentVelocityX(0), gameTime(0),
+    network(network), isMultiplayerMode(isMultiplayer), remotePlayer(nullptr)
 {
     player = new Player(width / 2, height / 2, 24, 30);
 
+    if (isMultiplayerMode && network) {
+        remotePlayer = new Player(width / 2, height / 2, 24, 30);
+    }
+
     platformWidth = 90;
     platformHeight = 14;
-    platformMinGap = 35;
-    platformMaxGap = 90;
+    platformMinGap = 30;
+    platformMaxGap = 80;
     platformScrollSpeed = 1;
 
-    // 批次生成参数
-    batchSize = 10;      // 每批生成10个砖块
-    batchThreshold = 7;  // 当7个砖块进入屏幕时生成新批次
+    batchSize = 10;
+    batchThreshold = 7;
 
     initGame();
+
+    if (isMultiplayerMode && network) {
+        connect(network, &Network::playerPositionReceived, this, &GameEngine::onPlayerPositionReceived);
+        connect(network, &Network::gameStateReceived, this, &GameEngine::onGameStateReceived);
+        connect(network, &Network::scoreUpdateReceived, this, &GameEngine::onScoreUpdateReceived);
+    }
 }
 
 void GameEngine::initGame()
@@ -118,7 +128,7 @@ void GameEngine::update()
         }
     }
 
-    float bei = std::min(1.0 + gameTime * 1.0 / 500000+score/2000, 1.5);
+    float bei = std::min(1.0 + gameTime * 1.0 / 500000 + score / 2000, 1.5);
     //float bei=1.5;
     // 保存上一帧的平台状态
     bool wasOnPlatform = player->isOnPlatform();
@@ -140,11 +150,7 @@ void GameEngine::update()
 
     // 检查批次生成条件 - 基于最高平台位置
     int highestPlatformY = 0;
-    for (Platform *platform : platforms) {
-        if (platform->getY() > highestPlatformY) {
-            highestPlatformY = platform->getY();
-        }
-    }
+    //for (Platform *platform : platforms) {if (platform->getY() > highestPlatformY) {highestPlatformY = platform->getY();}}
     for (Platform *platform : platformBatch) {
         if (platform->getY() > highestPlatformY) {
             highestPlatformY = platform->getY();
@@ -161,7 +167,7 @@ void GameEngine::update()
     for (int i = platformBatch.size() - 1; i >= 0; i--) {
         Platform *platform = platformBatch[i];
         int platformScreenY = platform->getY() - scrollOffset;
-        if (platformScreenY < height) {
+        if (platformScreenY < height+100) {
             platforms.append(platform);
             platformBatch.removeAt(i);
         }
@@ -263,7 +269,7 @@ void GameEngine::generateInitialPlatforms()
 
     // 生成其他初始平台
     int currentY = player->getY() + player->getHeight() / 2 + platformMinGap;
-    for (int i = 0; i < 11; i++) { // 总共11个平台（包括起始平台）
+    for (int i = 0; i < 12; i++) { // 总共11个平台（包括起始平台）
         addPlatformToBatch(currentY);
         currentY += QRandomGenerator::global()->bounded(platformMinGap, platformMaxGap);
     }
@@ -309,10 +315,10 @@ void GameEngine::addPlatformToBatch(int y)
     }
 
     // 决定平台类型（特殊平台概率）
-    int baseProbability = 1; // 基础概率5%
-    int redProbability = baseProbability + std::min(score / 80, 7);    // 最大15%
-    int blueProbability = baseProbability + std::min(score / 80, 12);   // 最大25%
-    int greenProbability = std::min(score / 110, 7);  // 最大20%
+    int baseProbability = 2;
+    int redProbability = baseProbability + std::min(score / 80, 7);
+    int blueProbability = baseProbability + std::min(score / 80, 12);
+    int greenProbability = std::min(score / 110, 7);
 
     int randValue = QRandomGenerator::global()->bounded(100);
     Platform::PlatformType type = Platform::NORMAL;
@@ -337,25 +343,25 @@ void GameEngine::addPlatformToBatch(int y)
 
     // 特殊平台宽度调整
     if (type == Platform::BOOST) {
-        platformWidthToUse = 60 + QRandomGenerator::global()->bounded(100)/10;
+        platformWidthToUse = 60 + QRandomGenerator::global()->bounded(100) / 10;
     } else if (type == Platform::SLOW || type == Platform::BOUNCE) {
-        platformWidthToUse = 70 + QRandomGenerator::global()->bounded(60)/10;
+        platformWidthToUse = 70 + QRandomGenerator::global()->bounded(60) / 10;
     }
 
     // 决定是否生成两个并排的平台（20%概率）
     if (QRandomGenerator::global()->bounded(100) < 20) {
         // 生成两个宽度为50的平台
-        int gap = std::abs(averageX-200)/2 + 3;
+        int gap = std::abs(averageX - 200) / 2 + 3;
 
         // 根据平均位置决定倾向哪一侧
         bool generateOnRight = averageX < 200;
 
         if (generateOnRight) {
             // 倾向于右侧
-            if(QRandomGenerator::global()->bounded(100) < 50)
+            if (QRandomGenerator::global()->bounded(100) < 50)
                 gap = 0;
-            int x1 = QRandomGenerator::global()->bounded(width/2 - 50 - gap);
-            int x2 = width/2 + gap + QRandomGenerator::global()->bounded(width/2 - 50 - gap);
+            int x1 = QRandomGenerator::global()->bounded(width / 2 - 50 - gap);
+            int x2 = width / 2 + gap + QRandomGenerator::global()->bounded(width / 2 - 50 - gap);
 
             // 确保不超出屏幕
             x1 = std::max(0, std::min(x1, width - 50));
@@ -371,10 +377,10 @@ void GameEngine::addPlatformToBatch(int y)
             recentPlatformXs.append((x1 + x2) / 2);
         } else {
             // 倾向于左侧
-            if(QRandomGenerator::global()->bounded(100) < 40)
+            if (QRandomGenerator::global()->bounded(100) < 40)
                 gap = 0;
-            int x1 = QRandomGenerator::global()->bounded(width/2 - 50 - gap);
-            int x2 = width/2 + gap + QRandomGenerator::global()->bounded(width/2 - 50 - gap);
+            int x1 = QRandomGenerator::global()->bounded(width / 2 - 50 - gap);
+            int x2 = width / 2 + gap + QRandomGenerator::global()->bounded(width / 2 - 50 - gap);
 
             // 确保不超出屏幕
             x1 = std::max(0, std::min(x1, width - 50));
@@ -392,13 +398,26 @@ void GameEngine::addPlatformToBatch(int y)
     } else {
         // 生成单个平台
         bool generateOnRight = averageX < width / 2;
-
-        if (generateOnRight) {
-            // 倾向于右侧（屏幕右半部分）
-            newX = width/2 + QRandomGenerator::global()->bounded(width/2 - platformWidthToUse - 20) - 20;
+        if( QRandomGenerator::global()->bounded(60)<20)
+        {
+            int x=width / 2 - platformWidthToUse - 40;
+            newX=width / 2+ QRandomGenerator::global()->bounded(2 * x + 1) - x;
+        } else if (generateOnRight) {
+          // 倾向于右侧（屏幕右半部分）
+          int rightRange = width / 2 - platformWidthToUse - 20;
+          if (rightRange > 0) {
+            newX = width / 2 + QRandomGenerator::global()->bounded(rightRange);
+          } else {
+            newX = width / 2;
+          }
         } else {
-            // 倾向于左侧（屏幕左半部分）
-            newX = QRandomGenerator::global()->bounded(width/2 - platformWidthToUse - 20) + 10;
+          // 倾向于左侧（屏幕左半部分）
+          int leftRange = width / 2 - platformWidthToUse - 20;
+          if (leftRange > 0) {
+            newX = QRandomGenerator::global()->bounded(leftRange);
+          } else {
+            newX = 0;
+          }
         }
 
         // 确保不超出屏幕
@@ -423,7 +442,7 @@ void GameEngine::draw(QPainter &painter, bool showDebugInfo)
     painter.setPen(Qt::black);
     for (Platform *platform : platforms) {
         int platformScreenY = platform->getY() - scrollOffset;
-        if (platformScreenY > -platformHeight && platformScreenY < height) {
+        if (platformScreenY > -platformHeight && platformScreenY < height+100) {
             // 根据平台类型设置颜色
             switch(platform->getType()) {
             case Platform::BOUNCE:
@@ -458,7 +477,7 @@ void GameEngine::draw(QPainter &painter, bool showDebugInfo)
     // 然后绘制批次中的平台（半透明表示尚未完全进入屏幕）
     for (Platform *platform : platformBatch) {
         int platformScreenY = platform->getY() - scrollOffset;
-        if (platformScreenY > -platformHeight && platformScreenY < height) {
+        if (platformScreenY > -platformHeight && platformScreenY < height+100) {
             // 半透明绘制批次中的平台
             QColor platformColor;
 
@@ -503,8 +522,8 @@ void GameEngine::draw(QPainter &painter, bool showDebugInfo)
         painter.setBrush(QColor(255, 100, 100, 100));
         painter.setPen(Qt::NoPen);
         int playerScreenY = player->getY() - scrollOffset;
-        painter.drawEllipse(player->getX() - player->getWidth()/2 - 5,
-                            playerScreenY - player->getHeight()/2 - 5,
+        painter.drawEllipse(player->getX() - player->getWidth() / 2 - 5,
+                            playerScreenY - player->getHeight() / 2 - 5,
                             player->getWidth() + 10,
                             player->getHeight() + 10);
     }
@@ -513,8 +532,8 @@ void GameEngine::draw(QPainter &painter, bool showDebugInfo)
         painter.setBrush(QColor(100, 100, 255, 100));
         painter.setPen(Qt::NoPen);
         int playerScreenY = player->getY() - scrollOffset;
-        painter.drawRect(player->getX() - player->getWidth()/2 - 5,
-                         playerScreenY - player->getHeight()/2 - 5,
+        painter.drawRect(player->getX() - player->getWidth() / 2 - 5,
+                         playerScreenY - player->getHeight() / 2 - 5,
                          player->getWidth() + 10,
                          player->getHeight() + 10);
     }
@@ -524,10 +543,10 @@ void GameEngine::draw(QPainter &painter, bool showDebugInfo)
         painter.setPen(Qt::NoPen);
         int playerScreenY = player->getY() - scrollOffset;
         QPointF points[4] = {
-            QPointF(player->getX(), playerScreenY - player->getHeight()/2 - 8),
-            QPointF(player->getX() - player->getWidth()/2 - 5, playerScreenY + player->getHeight()/2 + 5),
-            QPointF(player->getX() + player->getWidth()/2 + 5, playerScreenY + player->getHeight()/2 + 5),
-            QPointF(player->getX(), playerScreenY - player->getHeight()/2 - 8)
+            QPointF(player->getX(), playerScreenY - player->getHeight() / 2 - 8),
+            QPointF(player->getX() - player->getWidth() / 2 - 5, playerScreenY + player->getHeight() / 2 + 5),
+            QPointF(player->getX() + player->getWidth() / 2 + 5, playerScreenY + player->getHeight() / 2 + 5),
+            QPointF(player->getX(), playerScreenY - player->getHeight() / 2 - 8)
         };
         painter.drawPolygon(points, 4);
     }
@@ -551,11 +570,11 @@ void GameEngine::stopPlayerMovement()
 void GameEngine::jumpPlayer()
 {
     if (player->isOnPlatform() && !player->isJumping()) {
-        double jumpVelocity = -12 * deltaTime * 60;
+        double jumpVelocity = -10 * deltaTime * 60;
 
         // 高跳状态增加跳跃高度
         if (bounceActive) {
-            jumpVelocity *= 1.4; // 增加80%的跳跃高度
+            jumpVelocity *= 1.5;
         }
 
         player->jump(jumpVelocity);
@@ -570,17 +589,17 @@ void GameEngine::checkCollisions()
         int platformTop = platformScreenY;
 
         // 计算玩家底部位置（屏幕坐标）
-        int playerBottomScreen = player->getY() - scrollOffset + player->getHeight()/2;
+        int playerBottomScreen = player->getY() - scrollOffset + player->getHeight() / 2;
 
         // 碰撞检测条件
         if (player->getVelocity() >= 0 &&
             playerBottomScreen >= platformTop - 2 &&
             playerBottomScreen <= platformTop + 12 &&
-            player->getX() + player->getWidth()/2 - 2 > platform->getX() &&
-            player->getX() - player->getWidth()/2 + 2 < platform->getX() + platform->getWidth()) {
+            player->getX() + player->getWidth() / 2 - 2 > platform->getX() &&
+            player->getX() - player->getWidth() / 2 + 2 < platform->getX() + platform->getWidth()) {
 
             // 关键修复：玩家站在平台上
-            player->setY(platformTop + scrollOffset - player->getHeight()/2);
+            player->setY(platformTop + scrollOffset - player->getHeight() / 2);
             player->setVelocity(0);
             player->setJumping(false);
             player->setOnPlatform(true);
@@ -619,17 +638,17 @@ void GameEngine::checkCollisions()
         int platformTop = platformScreenY;
 
         // 计算玩家底部位置（屏幕坐标）
-        int playerBottomScreen = player->getY() - scrollOffset + player->getHeight()/2;
+        int playerBottomScreen = player->getY() - scrollOffset + player->getHeight() / 2;
 
         // 碰撞检测条件
         if (player->getVelocity() >= 0 &&
             playerBottomScreen >= platformTop - 2 &&
             playerBottomScreen <= platformTop + 12 &&
-            player->getX() + player->getWidth()/2 - 2 > platform->getX() &&
-            player->getX() - player->getWidth()/2 + 2 < platform->getX() + platform->getWidth()) {
+            player->getX() + player->getWidth() / 2 - 2 > platform->getX() &&
+            player->getX() - player->getWidth() / 2 + 2 < platform->getX() + platform->getWidth()) {
 
             // 关键修复：玩家站在平台上
-            player->setY(platformTop + scrollOffset - player->getHeight()/2);
+            player->setY(platformTop + scrollOffset - player->getHeight() / 2);
             player->setVelocity(0);
             player->setJumping(false);
             player->setOnPlatform(true);
@@ -697,7 +716,7 @@ void GameEngine::checkGameOver()
 {
     // 玩家掉出屏幕底部
     int playerScreenY = player->getY() - scrollOffset;
-    if (playerScreenY > height+10 ) {
+    if (playerScreenY > height + 10) {
         gameOver = true;
         return;
     }
@@ -706,6 +725,45 @@ void GameEngine::checkGameOver()
     if (playerScreenY < -50) {
         gameOver = true;
         return;
+    }
+}
+
+void GameEngine::onPlayerPositionReceived(double x, double y, double velocity)
+{
+    if (remotePlayer) {
+        remotePlayer->setX(x);
+        remotePlayer->setY(y);
+        remotePlayer->setVelocity(velocity);
+    }
+}
+
+void GameEngine::onGameStateReceived(const QByteArray &state)
+{
+    // 实现游戏状态接收处理逻辑
+    Q_UNUSED(state);
+    // 这里可以添加反序列化游戏状态的代码
+}
+
+void GameEngine::onScoreUpdateReceived(int score)
+{
+    // 实现分数更新处理逻辑
+    Q_UNUSED(score);
+    // 这里可以添加更新远程玩家分数的代码
+}
+
+void GameEngine::setNetwork(Network* network, bool isHost)
+{
+    this->network = network;
+    this->isMultiplayerMode = isHost;
+
+    if (isMultiplayerMode && network) {
+        // 重新连接信号和槽
+        connect(network, &Network::playerPositionReceived,
+                this, &GameEngine::onPlayerPositionReceived);
+        connect(network, &Network::gameStateReceived,
+                this, &GameEngine::onGameStateReceived);
+        connect(network, &Network::scoreUpdateReceived,
+                this, &GameEngine::onScoreUpdateReceived);
     }
 }
 

@@ -1,6 +1,4 @@
-// Network.cpp
 #include "network.h"
-
 #include <QDebug>
 
 Network::Network(QObject* parent) : QObject(parent) {
@@ -21,7 +19,8 @@ bool Network::createHost(quint16 port) {
 
     tcpServer = new QTcpServer(this);
     if (!tcpServer->listen(QHostAddress::Any, port)) {
-        emit errorOccurred(tcpServer->errorString());
+        lastError = tcpServer->errorString();
+        emit errorOccurred(lastError);
         delete tcpServer;
         tcpServer = nullptr;
         return false;
@@ -121,7 +120,7 @@ void Network::processMessage(QByteArray const& message) {
             int highScore;
             lbStream >> gameId >> username >> highScore;
             Account acc;
-            acc.createAccount(username, gameId);
+            acc.createAccount(username, "", gameId); // 修改此处
             acc.setHighScore(highScore);
             leaderboard.append(acc);
         }
@@ -149,7 +148,7 @@ void Network::processMessage(QByteArray const& message) {
         accStream >> gameId >> username >> highScore;
 
         Account remoteAccount;
-        remoteAccount.createAccount(username, gameId);
+        remoteAccount.createAccount(username, "", gameId); // 修改此处
         remoteAccount.setHighScore(highScore);
 
         // 这里可以保存远程账号信息
@@ -211,7 +210,8 @@ void Network::onDisconnected() {
 void Network::onError(QAbstractSocket::SocketError error) {
     Q_UNUSED(error)
     if (tcpSocket) {
-        emit errorOccurred(tcpSocket->errorString());
+        lastError = tcpSocket->errorString();
+        emit errorOccurred(lastError);
     }
 }
 
@@ -225,4 +225,8 @@ void Network::setCurrentAccount(Account const& account) {
 
 Account Network::getCurrentAccount() const {
     return currentAccount;
+}
+
+QString Network::errorString() const {
+    return lastError;
 }

@@ -8,8 +8,10 @@ C:/Users/10169/Desktop/man100/deeprock/mainwindow.h
  mdp:C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:C:/Users/10169/Desktop/man100/deeprock/mainwindow.h
+ mdp:C:/Users/10169/Desktop/man100/deeprock/network.h
  mdp:C:/Users/10169/Desktop/man100/deeprock/platform.h
  mdp:C:/Users/10169/Desktop/man100/deeprock/player.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QDataStream
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QDateTime
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QDebug
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QDir
@@ -206,6 +208,16 @@ C:/Users/10169/Desktop/man100/deeprock/mainwindow.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtGui/qtransform.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtGui/qwindowdefs.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtGui/qwindowdefs_win.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/QHostAddress
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/QTcpServer
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/QTcpSocket
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qabstractsocket.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qhostaddress.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qtcpserver.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qtcpsocket.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qtnetwork-config.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qtnetworkexports.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qtnetworkglobal.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtWidgets/QMainWindow
  mdp:D:/qt/6.9.1/mingw_64/include/QtWidgets/QWidget
  mdp:D:/qt/6.9.1/mingw_64/include/QtWidgets/qmainwindow.h
@@ -469,13 +481,24 @@ C:/Users/10169/Desktop/man100/deeprock/mainwindow.h
 C:/Users/10169/Desktop/man100/deeprock/leaderboard.cpp
 C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mmc:Q_OBJECT
+ mdp:C:/Users/10169/Desktop/man100/deeprock/account.h
  mdp:C:/Users/10169/Desktop/man100/deeprock/build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/DeepRock_autogen/moc_predefs.h
  mdp:C:/Users/10169/Desktop/man100/deeprock/gameengine.h
+ mdp:C:/Users/10169/Desktop/man100/deeprock/network.h
  mdp:C:/Users/10169/Desktop/man100/deeprock/platform.h
  mdp:C:/Users/10169/Desktop/man100/deeprock/player.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QDataStream
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QDateTime
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QDebug
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QDir
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QFile
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QJsonArray
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QJsonDocument
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QJsonObject
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QList
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QObject
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QRandomGenerator
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QString
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QVector
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/q17memory.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/q20functional.h
@@ -499,6 +522,8 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qbytearraylist.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qbytearrayview.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qcalendar.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qcborcommon.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qcborvalue.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qchar.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qcompare.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qcompare_impl.h
@@ -514,8 +539,13 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qdatastream.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qdatetime.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qdebug.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qdir.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qdirlisting.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qendian.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qexceptionhandling.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qfile.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qfiledevice.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qfileinfo.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qflags.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qfloat16.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qforeach.h
@@ -526,9 +556,15 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qglobalstatic.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qhash.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qhashfunctions.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qiodevice.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qiodevicebase.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qiterable.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qiterator.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qjsonarray.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qjsondocument.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qjsonobject.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qjsonparseerror.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qjsonvalue.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qlatin1stringview.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qline.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qlist.h
@@ -551,8 +587,10 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qpair.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qpoint.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qprocessordetection.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qrandom.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qrect.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qrefcount.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qregularexpression.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qscopedpointer.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qscopeguard.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qset.h
@@ -589,6 +627,7 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtenvironmentvariables.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtextstream.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtformat_impl.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtimezone.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtmetamacros.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtnoop.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtpreprocessorsupport.h
@@ -599,7 +638,9 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtversionchecks.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtypeinfo.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtypes.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qurl.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qutf8stringview.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/quuid.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qvariant.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qvarlengtharray.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qvector.h
@@ -630,6 +671,16 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtGui/qtransform.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtGui/qwindowdefs.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtGui/qwindowdefs_win.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/QHostAddress
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/QTcpServer
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/QTcpSocket
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qabstractsocket.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qhostaddress.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qtcpserver.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qtcpsocket.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qtnetwork-config.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qtnetworkexports.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qtnetworkglobal.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/algorithm
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/array
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/atomic
@@ -643,11 +694,14 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/allocator.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_base.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_lockfree_defines.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/basic_ios.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/basic_ios.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/basic_string.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/basic_string.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/char_traits.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/charconv.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/chrono.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/codecvt.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/concept_check.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/cpp_type_traits.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/cxxabi_forced.h
@@ -657,6 +711,10 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/exception.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/exception_defines.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/exception_ptr.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/fs_dir.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/fs_fwd.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/fs_ops.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/fs_path.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/functexcept.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/functional_hash.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/hash_bytes.h
@@ -664,9 +722,15 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/hashtable_policy.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/invoke.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/ios_base.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/istream.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/list.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/locale_classes.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/locale_classes.tcc
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/locale_conv.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/locale_facets.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/locale_facets.tcc
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/locale_facets_nonio.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/locale_facets_nonio.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/localefwd.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/memory_resource.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/memoryfwd.h
@@ -674,11 +738,15 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/nested_exception.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/new_allocator.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/node_handle.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/ostream.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/ostream_insert.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/parse_numbers.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/postypes.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/predefined_ops.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/ptr_traits.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/quoted_string.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/random.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/random.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/range_access.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/refwrap.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/requires_hosted.h
@@ -686,6 +754,7 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/shared_ptr_atomic.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/shared_ptr_base.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/specfun.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/sstream.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/std_abs.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/std_function.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/stl_algo.h
@@ -730,6 +799,7 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/climits
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/clocale
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/cmath
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/codecvt
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/compare
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/cstddef
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/cstdint
@@ -738,6 +808,7 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/cstring
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ctime
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/cwchar
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/cwctype
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/debug/assertions.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/debug/debug.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/exception
@@ -748,23 +819,31 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ext/numeric_traits.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ext/string_conversions.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ext/type_traits.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/filesystem
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/functional
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/initializer_list
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iomanip
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ios
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iosfwd
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/istream
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iterator
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/limits
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/list
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/locale
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/map
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/memory
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/new
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/numeric
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/optional
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ostream
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/pstl/execution_defs.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/pstl/glue_algorithm_defs.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/pstl/glue_memory_defs.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/pstl/glue_numeric_defs.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/random
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ratio
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/set
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/sstream
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/stdexcept
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/stdlib.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/streambuf
@@ -796,16 +875,27 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/c++config.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/c++locale.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/cpu_defines.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/ctype_base.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/ctype_inline.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/error_constants.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/gthr-default.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/gthr.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/messages_members.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/opt_random.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/os_defines.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/time_members.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/emmintrin.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/limits.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/mm_malloc.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/mmintrin.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/mwaitintrin.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/pmmintrin.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stdarg.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stdbool.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stddef.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stdint.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/syslimits.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/xmmintrin.h
  mdp:D:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/_mingw.h
  mdp:D:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/_mingw_mac.h
  mdp:D:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/_mingw_off_t.h
@@ -841,16 +931,28 @@ C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:D:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/time.h
  mdp:D:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/vadefs.h
  mdp:D:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wchar.h
+ mdp:D:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wctype.h
 C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mmc:Q_OBJECT
+ mdp:C:/Users/10169/Desktop/man100/deeprock/account.h
  mdp:C:/Users/10169/Desktop/man100/deeprock/build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/DeepRock_autogen/moc_predefs.h
  mdp:C:/Users/10169/Desktop/man100/deeprock/gameengine.h
  mdp:C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
+ mdp:C:/Users/10169/Desktop/man100/deeprock/network.h
  mdp:C:/Users/10169/Desktop/man100/deeprock/platform.h
  mdp:C:/Users/10169/Desktop/man100/deeprock/player.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QDataStream
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QDateTime
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QDebug
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QDir
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QFile
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QJsonArray
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QJsonDocument
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QJsonObject
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QList
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QObject
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QRandomGenerator
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QString
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QTimer
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/QVector
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/q17memory.h
@@ -877,6 +979,8 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qbytearraylist.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qbytearrayview.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qcalendar.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qcborcommon.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qcborvalue.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qchar.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qcompare.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qcompare_impl.h
@@ -893,10 +997,15 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qdatetime.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qdeadlinetimer.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qdebug.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qdir.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qdirlisting.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qelapsedtimer.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qendian.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qeventloop.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qexceptionhandling.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qfile.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qfiledevice.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qfileinfo.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qflags.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qfloat16.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qforeach.h
@@ -907,9 +1016,15 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qglobalstatic.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qhash.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qhashfunctions.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qiodevice.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qiodevicebase.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qiterable.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qiterator.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qjsonarray.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qjsondocument.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qjsonobject.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qjsonparseerror.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qjsonvalue.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qlatin1stringview.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qline.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qlist.h
@@ -932,8 +1047,10 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qpair.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qpoint.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qprocessordetection.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qrandom.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qrect.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qrefcount.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qregularexpression.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qscopedpointer.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qscopeguard.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qset.h
@@ -971,6 +1088,7 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtextstream.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtformat_impl.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtimer.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtimezone.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtmetamacros.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtnoop.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtpreprocessorsupport.h
@@ -981,7 +1099,9 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtversionchecks.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtypeinfo.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qtypes.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qurl.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qutf8stringview.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtCore/quuid.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qvariant.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qvarlengtharray.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtCore/qvector.h
@@ -1018,6 +1138,16 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtGui/qtransform.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtGui/qwindowdefs.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtGui/qwindowdefs_win.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/QHostAddress
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/QTcpServer
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/QTcpSocket
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qabstractsocket.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qhostaddress.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qtcpserver.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qtcpsocket.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qtnetwork-config.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qtnetworkexports.h
+ mdp:D:/qt/6.9.1/mingw_64/include/QtNetwork/qtnetworkglobal.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtWidgets/QWidget
  mdp:D:/qt/6.9.1/mingw_64/include/QtWidgets/qsizepolicy.h
  mdp:D:/qt/6.9.1/mingw_64/include/QtWidgets/qtwidgets-config.h
@@ -1037,11 +1167,14 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/allocator.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_base.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_lockfree_defines.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/basic_ios.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/basic_ios.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/basic_string.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/basic_string.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/char_traits.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/charconv.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/chrono.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/codecvt.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/concept_check.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/cpp_type_traits.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/cxxabi_forced.h
@@ -1051,6 +1184,10 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/exception.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/exception_defines.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/exception_ptr.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/fs_dir.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/fs_fwd.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/fs_ops.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/fs_path.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/functexcept.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/functional_hash.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/hash_bytes.h
@@ -1058,9 +1195,15 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/hashtable_policy.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/invoke.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/ios_base.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/istream.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/list.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/locale_classes.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/locale_classes.tcc
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/locale_conv.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/locale_facets.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/locale_facets.tcc
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/locale_facets_nonio.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/locale_facets_nonio.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/localefwd.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/memory_resource.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/memoryfwd.h
@@ -1068,11 +1211,15 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/nested_exception.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/new_allocator.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/node_handle.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/ostream.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/ostream_insert.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/parse_numbers.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/postypes.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/predefined_ops.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/ptr_traits.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/quoted_string.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/random.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/random.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/range_access.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/refwrap.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/requires_hosted.h
@@ -1080,6 +1227,7 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/shared_ptr_atomic.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/shared_ptr_base.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/specfun.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/sstream.tcc
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/std_abs.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/std_function.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/stl_algo.h
@@ -1124,6 +1272,7 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/climits
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/clocale
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/cmath
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/codecvt
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/compare
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/cstddef
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/cstdint
@@ -1132,6 +1281,7 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/cstring
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ctime
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/cwchar
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/cwctype
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/debug/assertions.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/debug/debug.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/exception
@@ -1142,23 +1292,31 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ext/numeric_traits.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ext/string_conversions.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ext/type_traits.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/filesystem
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/functional
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/initializer_list
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iomanip
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ios
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iosfwd
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/istream
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iterator
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/limits
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/list
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/locale
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/map
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/memory
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/new
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/numeric
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/optional
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ostream
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/pstl/execution_defs.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/pstl/glue_algorithm_defs.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/pstl/glue_memory_defs.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/pstl/glue_numeric_defs.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/random
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ratio
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/set
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/sstream
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/stdexcept
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/stdlib.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/streambuf
@@ -1190,16 +1348,27 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/c++config.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/c++locale.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/cpu_defines.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/ctype_base.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/ctype_inline.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/error_constants.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/gthr-default.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/gthr.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/messages_members.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/opt_random.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/os_defines.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/time_members.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/emmintrin.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/limits.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/mm_malloc.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/mmintrin.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/mwaitintrin.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/pmmintrin.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stdarg.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stdbool.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stddef.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stdint.h
  mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/syslimits.h
+ mdp:D:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/xmmintrin.h
  mdp:D:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/_mingw.h
  mdp:D:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/_mingw_mac.h
  mdp:D:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/_mingw_off_t.h
@@ -1235,6 +1404,7 @@ C:/Users/10169/Desktop/man100/deeprock/gamewindow.h
  mdp:D:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/time.h
  mdp:D:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/vadefs.h
  mdp:D:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wchar.h
+ mdp:D:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wctype.h
 C:/Users/10169/Desktop/man100/deeprock/leaderboardwidget.h
  mmc:Q_OBJECT
  mdp:C:/Users/10169/Desktop/man100/deeprock/account.h

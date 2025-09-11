@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "gamewindow.h"
 #include "account.h"
+#include "network.h" // 添加Network头文件
 
 namespace Ui {
 class MainWindow;
@@ -36,6 +37,7 @@ private:
     void registerAccount();    // 添加声明
     void changeAccount();      // 添加声明
     void showMultiplayerDialog();
+    void startMultiplayerGame(Network* network, bool isHost); // 添加声明
     void showLeaderboard();
 };
 

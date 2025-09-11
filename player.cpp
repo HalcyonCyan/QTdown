@@ -11,7 +11,7 @@ void Player::reset(double x, double y)
     this->y = y;
     velocity = 0;
     jumping = false;
-    onPlatform = true; // 初始时玩家站在平台上
+    onPlatform = true;
 }
 
 void Player::draw(QPainter &painter, int scrollOffset) const
@@ -61,3 +61,4 @@ void Player::setY(double y) { this->y = y; }
 void Player::setVelocity(double velocity) { this->velocity = velocity; }
 void Player::setJumping(bool jumping) { this->jumping = jumping; }
 void Player::setOnPlatform(bool onPlatform) { this->onPlatform = onPlatform; }
+

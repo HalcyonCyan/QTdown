@@ -38,10 +38,36 @@ template <> constexpr inline auto GameEngine::qt_create_metaobjectdata<qt_meta_t
 {
     namespace QMC = QtMocConstants;
     QtMocHelpers::StringRefStorage qt_stringData {
-        "GameEngine"
+        "GameEngine",
+        "scoreUpdated",
+        "",
+        "score",
+        "onPlayerPositionReceived",
+        "x",
+        "y",
+        "velocity",
+        "onGameStateReceived",
+        "state",
+        "onScoreUpdateReceived"
     };
 
     QtMocHelpers::UintData qt_methods {
+        // Signal 'scoreUpdated'
+        QtMocHelpers::SignalData<void(int)>(1, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Int, 3 },
+        }}),
+        // Slot 'onPlayerPositionReceived'
+        QtMocHelpers::SlotData<void(double, double, double)>(4, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Double, 5 }, { QMetaType::Double, 6 }, { QMetaType::Double, 7 },
+        }}),
+        // Slot 'onGameStateReceived'
+        QtMocHelpers::SlotData<void(const QByteArray &)>(8, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QByteArray, 9 },
+        }}),
+        // Slot 'onScoreUpdateReceived'
+        QtMocHelpers::SlotData<void(int)>(10, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Int, 3 },
+        }}),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -63,10 +89,19 @@ Q_CONSTINIT const QMetaObject GameEngine::staticMetaObject = { {
 void GameEngine::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     auto *_t = static_cast<GameEngine *>(_o);
-    (void)_t;
-    (void)_c;
-    (void)_id;
-    (void)_a;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: _t->scoreUpdated((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 1: _t->onPlayerPositionReceived((*reinterpret_cast< std::add_pointer_t<double>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<double>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<double>>(_a[3]))); break;
+        case 2: _t->onGameStateReceived((*reinterpret_cast< std::add_pointer_t<QByteArray>>(_a[1]))); break;
+        case 3: _t->onScoreUpdateReceived((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        default: ;
+        }
+    }
+    if (_c == QMetaObject::IndexOfMethod) {
+        if (QtMocHelpers::indexOfMethod<void (GameEngine::*)(int )>(_a, &GameEngine::scoreUpdated, 0))
+            return;
+    }
 }
 
 const QMetaObject *GameEngine::metaObject() const
@@ -85,6 +120,24 @@ void *GameEngine::qt_metacast(const char *_clname)
 int GameEngine::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QObject::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 4)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 4;
+    }
+    if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 4)
+            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+        _id -= 4;
+    }
     return _id;
+}
+
+// SIGNAL 0
+void GameEngine::scoreUpdated(int _t1)
+{
+    QMetaObject::activate<void>(this, &staticMetaObject, 0, nullptr, _t1);
 }
 QT_WARNING_POP
