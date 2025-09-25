@@ -18,7 +18,10 @@ public:
         ScoreUpdate,
         LeaderboardSync,
         ConnectionRequest,
-        ConnectionAccepted
+        ConnectionAccepted,
+        GameStart, 
+        PlatformData,       
+        GameInitData
     };
 
     explicit Network(QObject *parent = nullptr);
@@ -28,7 +31,8 @@ public:
     bool connectToHost(const QString &ip, quint16 port);
     void disconnect();
     bool isConnected() const;
-
+    void sendGameStart();
+ void requestGameStart();
     void sendPlayerPosition(double x, double y, double velocity);
     void sendGameState(const QByteArray &state);
     void sendScoreUpdate(int score);
@@ -37,9 +41,12 @@ public:
     void setCurrentAccount(const Account &account);
     Account getCurrentAccount() const;
 
-    QString errorString() const; // 添加此函数
-
+    QString errorString() const;
+    QString getLocalIPAddress(); 
+    void sendPlatformData(const QByteArray& data);
+    void sendGameInitData(const QByteArray& data);
 signals:
+    void hostCreated(const QString &ip, quint16 port); 
     void connected();
     void disconnected();
     void playerPositionReceived(double x, double y, double velocity);
@@ -47,6 +54,11 @@ signals:
     void scoreUpdateReceived(int score);
     void leaderboardReceived(const QList<Account> &leaderboard);
     void errorOccurred(const QString &error);
+    void connectionTimeout();
+
+    void platformDataReceived(const QByteArray& data);
+    void gameInitDataReceived(const QByteArray& data);
+
 
 private slots:
     void onNewConnection();
@@ -59,10 +71,10 @@ private:
     QTcpSocket *tcpSocket;
     bool isHost;
     Account currentAccount;
-    QString lastError; // 添加此变量
+    QString lastError;
 
     void sendMessage(MessageType type, const QByteArray &data);
     void processMessage(const QByteArray &message);
 };
 
-#endif // NETWORK_H
+#endif 

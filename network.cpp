@@ -1,5 +1,7 @@
 #include "network.h"
 #include <QDebug>
+#include <QTimer>
+#include <QNetworkInterface> 
 
 Network::Network(QObject* parent) : QObject(parent) {
     tcpServer = nullptr;
@@ -28,10 +30,31 @@ bool Network::createHost(quint16 port) {
 
     connect(tcpServer, &QTcpServer::newConnection, this, &Network::onNewConnection);
     isHost = true;
+
+    
+    QString ipAddress = getLocalIPAddress();
+    emit hostCreated(ipAddress, port);
+
     return true;
 }
 
-bool Network::connectToHost(QString const& ip, quint16 port) {
+
+QString Network::getLocalIPAddress() {
+    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+
+    
+    for (const QHostAddress &address : ipAddressesList) {
+        if (address.protocol() == QAbstractSocket::IPv4Protocol &&
+            address != QHostAddress::LocalHost) {
+            return address.toString();
+        }
+    }
+
+    return QHostAddress(QHostAddress::LocalHost).toString();
+}
+
+bool Network::connectToHost(QString const& ip, quint16 port)
+{
     if (tcpSocket) {
         delete tcpSocket;
         tcpSocket = nullptr;
@@ -45,11 +68,49 @@ bool Network::connectToHost(QString const& ip, quint16 port) {
             QOverload<QAbstractSocket::SocketError>::of(&QTcpSocket::errorOccurred),
             this,
             &Network::onError);
+    connect(tcpSocket, &QTcpSocket::stateChanged, this, [this](QAbstractSocket::SocketState state) {
+        qDebug() << "Socket state changed:" << state;
+    });
+    
+    QTimer::singleShot(10000, this, [this]() {
+        if (tcpSocket && tcpSocket->state() == QAbstractSocket::ConnectingState) {
+            lastError = tr("连接超时");
+            emit errorOccurred(lastError);
+            disconnect();
+        }
+    });
 
     tcpSocket->connectToHost(ip, port);
     return true;
 }
 
+
+void Network::sendPlatformData(const QByteArray& data)
+{
+    sendMessage(PlatformData, data);
+}
+
+void Network::sendGameInitData(const QByteArray& data)
+{
+    sendMessage(GameInitData, data);
+}
+
+void Network::requestGameStart()
+{
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream << true; 
+    sendMessage(GameStart, data);
+}
+
+
+void Network::sendGameStart()
+{
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream << true; 
+    sendMessage(GameStart, data);
+}
 void Network::onNewConnection() {
     if (tcpServer && tcpServer->hasPendingConnections()) {
         tcpSocket = tcpServer->nextPendingConnection();
@@ -60,7 +121,7 @@ void Network::onNewConnection() {
                 this,
                 &Network::onError);
 
-        // 发送连接接受消息和当前账号信息
+        
         QByteArray data;
         QDataStream stream(&data, QIODevice::WriteOnly);
         stream << currentAccount.getGameId() << currentAccount.getUsername() << currentAccount.getHighScore();
@@ -70,14 +131,17 @@ void Network::onNewConnection() {
     }
 }
 
-void Network::onReadyRead() {
-    if (tcpSocket) {
-        while (tcpSocket->bytesAvailable() > 0) {
-            QByteArray message = tcpSocket->readAll();
-            processMessage(message);
-        }
-    }
+
+void Network::onReadyRead()
+{
+    if (!tcpSocket) return;
+
+    
+    QByteArray data = tcpSocket->readAll();
+    QMetaObject::invokeMethod(this, "processMessage", Qt::QueuedConnection,
+                              Q_ARG(QByteArray, data));
 }
+
 
 void Network::sendMessage(MessageType type, QByteArray const& data) {
     if (tcpSocket && tcpSocket->state() == QAbstractSocket::ConnectedState) {
@@ -93,6 +157,12 @@ void Network::processMessage(QByteArray const& message) {
     quint32 type;
     QByteArray data;
     stream >> type >> data;
+    if (message.size() < static_cast<int>(sizeof(quint32))) {
+        qWarning() << "Received message too short";
+        return;
+    }
+
+
 
     switch (static_cast<MessageType>(type)) {
     case PlayerPosition: {
@@ -120,7 +190,7 @@ void Network::processMessage(QByteArray const& message) {
             int highScore;
             lbStream >> gameId >> username >> highScore;
             Account acc;
-            acc.createAccount(username, "", gameId); // 修改此处
+            acc.createAccount(username, "", gameId); 
             acc.setHighScore(highScore);
             leaderboard.append(acc);
         }
@@ -128,13 +198,13 @@ void Network::processMessage(QByteArray const& message) {
         break;
     }
     case ConnectionRequest: {
-        // 处理连接请求
+        
         QDataStream connStream(data);
         QString gameId, username;
         int highScore;
         connStream >> gameId >> username >> highScore;
 
-        // 发送接受连接和当前账号信息
+        
         QByteArray response;
         QDataStream responseStream(&response, QIODevice::WriteOnly);
         responseStream << currentAccount.getGameId() << currentAccount.getUsername() << currentAccount.getHighScore();
@@ -148,12 +218,18 @@ void Network::processMessage(QByteArray const& message) {
         accStream >> gameId >> username >> highScore;
 
         Account remoteAccount;
-        remoteAccount.createAccount(username, "", gameId); // 修改此处
+        remoteAccount.createAccount(username, "", gameId); 
         remoteAccount.setHighScore(highScore);
 
-        // 这里可以保存远程账号信息
+        
         break;
     }
+    case PlatformData:
+    {emit platformDataReceived(data);
+        break;}
+    case GameInitData:
+    {emit gameInitDataReceived(data);
+        break;   }
     }
 }
 
@@ -163,6 +239,7 @@ void Network::sendPlayerPosition(double x, double y, double velocity) {
     stream << x << y << velocity;
     sendMessage(PlayerPosition, data);
 }
+
 
 void Network::sendGameState(QByteArray const& state) {
     sendMessage(GameState, state);
@@ -207,12 +284,13 @@ void Network::onDisconnected() {
     emit disconnected();
 }
 
-void Network::onError(QAbstractSocket::SocketError error) {
-    Q_UNUSED(error)
-    if (tcpSocket) {
-        lastError = tcpSocket->errorString();
-        emit errorOccurred(lastError);
-    }
+void Network::onError(QAbstractSocket::SocketError error)
+{
+    lastError = tcpSocket->errorString();
+    qDebug() << "Network error:" << lastError;
+    emit errorOccurred(lastError);
+
+    QMetaObject::invokeMethod(this, "disconnect", Qt::QueuedConnection);
 }
 
 bool Network::isConnected() const {

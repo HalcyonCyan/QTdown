@@ -5,22 +5,22 @@
 #include <QTimer>
 #include <QPainter>
 #include "gameengine.h"
-#include "network.h"  // 添加网络头文件
+#include "network.h"
 
 class GameWindow : public QWidget
 {
     Q_OBJECT
 
 public:
-    // 修改构造函数，添加网络参数
     explicit GameWindow(bool isMultiplayer = false, Network* network = nullptr,
                         QWidget *parent = nullptr);
     ~GameWindow();
-
+    GameEngine* getGameEngine() const { return gameEngine; }
     void startGame();
     void restartGame();
     int getScore() const;
     void setNetwork(Network* network, bool isHost);
+
 signals:
     void gameFinished();
 
@@ -31,31 +31,24 @@ protected:
 
 private slots:
     void updateGame();
-    void onNetworkError(const QString &error);  // 添加网络错误处理
+    void onNetworkError(const QString &error);
+    void onNetworkDisconnected();
 
 private:
     void drawScore(QPainter &painter);
     void toggleDebugInfo();
     void drawPauseMenu(QPainter &painter);
     void returnToMainMenu();
-    bool isHost;
-    Network* network;
-    int score;
 
-    // 其他成员变量和函数
-    void initialize(); // 示例初始化函数
-\
-
-    // 连接信号和槽
-    void connectNetworkSignals();
     QTimer *timer;
     GameEngine *gameEngine;
     bool showDebugInfo;
     bool gamePaused;
 
-    // 添加网络相关成员
-
+    
+    Network* network;
     bool isMultiplayerMode;
+    bool isHost;
 };
 
-#endif // GAMEWINDOW_H
+#endif 

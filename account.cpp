@@ -145,11 +145,11 @@ QList<Account> Account::getAllAccounts()
 {
     QList<Account> accounts;
 
-    // 确保目录存在
+    
     QDir dir("accounts");
     if (!dir.exists()) {
         dir.mkpath(".");
-        return accounts; // 目录不存在，返回空列表
+        return accounts; 
     }
 
     QStringList filters;

@@ -22,4 +22,4 @@ private:
     QPushButton *clearButton;
 };
 
-#endif // LEADERBOARDWIDGET_H
+#endif 

@@ -27,7 +27,7 @@ void Player::move(double dx, double dy, int screenWidth)
     x += dx;
     y += dy;
 
-    // 确保玩家不会移出屏幕左右边界
+
     if (x < width/2) x = width/2;
     if (x > screenWidth - width/2) x = screenWidth - width/2;
 }
@@ -39,6 +39,9 @@ void Player::jump(double velocity)
     onPlatform = false;
 }
 
+
+
+
 void Player::applyGravity(double gravity)
 {
     if (!onPlatform) {
@@ -46,7 +49,7 @@ void Player::applyGravity(double gravity)
         y += velocity;
     }
 }
-// Getter 方法
+
 double Player::getX() const { return x; }
 double Player::getY() const { return y; }
 double Player::getWidth() const { return width; }
@@ -55,7 +58,7 @@ double Player::getVelocity() const { return velocity; }
 bool Player::isJumping() const { return jumping; }
 bool Player::isOnPlatform() const { return onPlatform; }
 
-// Setter 方法
+
 void Player::setX(double x) { this->x = x; }
 void Player::setY(double y) { this->y = y; }
 void Player::setVelocity(double velocity) { this->velocity = velocity; }

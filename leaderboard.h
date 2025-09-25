@@ -26,7 +26,7 @@ public:
 
     static Leaderboard* instance();
 
-    // 新增一个接口：清空排行榜
+    
     void clear();
 
 private:
@@ -35,4 +35,4 @@ private:
     void sort();
 };
 
-#endif // LEADERBOARD_H
+#endif 

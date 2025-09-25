@@ -4,8 +4,8 @@
 #include <QMainWindow>
 #include "gamewindow.h"
 #include "account.h"
-#include "network.h" // 添加Network头文件
-
+#include "network.h" 
+#include "waitingdialog.h"
 namespace Ui {
 class MainWindow;
 }
@@ -25,20 +25,23 @@ private slots:
     void on_leaderboardButton_clicked();
     void on_exitButton_clicked();
     void gameFinished();
+    void onHostCreated(const QString &ip, quint16 port);
 
 private:
     Ui::MainWindow *ui;
     GameWindow *gameWindow;
     bool gameRunning;
-    Account currentAccount;
+    Account currentAccount;    WaitingDialog *waitingDialog;
+
 
     void updateAccountDisplay();
     void showAccountDialog();
-    void registerAccount();    // 添加声明
-    void changeAccount();      // 添加声明
+    void registerAccount();    
+    void changeAccount();      
     void showMultiplayerDialog();
-    void startMultiplayerGame(Network* network, bool isHost); // 添加声明
+    void startMultiplayerGame(Network* network, bool isHost); 
     void showLeaderboard();
+
 };
 
-#endif // MAINWINDOW_H
+#endif 

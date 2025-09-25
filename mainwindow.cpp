@@ -12,8 +12,7 @@
 #include <QDialogButtonBox>
 #include "leaderboard.h"
 #include "leaderboardwidget.h"
-#include "network.h" // 添加Network头文件
-
+#include "network.h"
 #include <QTableWidget>
 #include <QHeaderView>
 #include <QTableWidgetItem>
@@ -29,13 +28,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // 设置窗口标题和大小
+    
     setWindowTitle(tr("DeepRock - Platform Jumping Game"));
     setFixedSize(400, 500);
 
-    // 尝试加载默认账号
+    
     if (!currentAccount.loadAccount("default")) {
-        // 如果没有默认账号，创建一个默认账号
+
         currentAccount.createAccount("Player", "", "default");
     }
 
@@ -59,15 +58,15 @@ void MainWindow::updateAccountDisplay()
 
 void MainWindow::showAccountDialog()
 {
-    // 创建账号管理对话框 - 增加高度
+    
     QDialog dialog(this);
     dialog.setWindowTitle(tr("账号管理"));
-    dialog.setFixedSize(400, 300);  // 增加宽度和高度
+    dialog.setFixedSize(400, 300);  
 
     QVBoxLayout layout(&dialog);
     layout.setSpacing(15);
 
-    // 显示当前账号信息 - 增加高度并设置自动换行
+    
     QLabel infoLabel(&dialog);
     infoLabel.setText(
         QString(tr("当前账号: %1\n账号ID: %2\n最高分: %3"))
@@ -75,23 +74,23 @@ void MainWindow::showAccountDialog()
             .arg(currentAccount.getGameId())
             .arg(currentAccount.getHighScore())
         );
-    infoLabel.setWordWrap(true); // 允许文本自动换行
-    infoLabel.setMinimumHeight(120); // 设置最小高度
-    infoLabel.setAlignment(Qt::AlignLeft | Qt::AlignTop); // 左上对齐
-    infoLabel.setStyleSheet("font-size: 12px;"); // 设置字体大小
+    infoLabel.setWordWrap(true);
+    infoLabel.setMinimumHeight(120); 
+    infoLabel.setAlignment(Qt::AlignLeft | Qt::AlignTop); 
+    infoLabel.setStyleSheet("font-size: 12px;"); 
     layout.addWidget(&infoLabel);
 
-    // 添加按钮 - 竖向排列
+    
     QPushButton registerButton(tr("注册账号"), &dialog);
     QPushButton changeButton(tr("更换账号"), &dialog);
     QPushButton closeButton(tr("关闭"), &dialog);
 
-    // 设置按钮固定大小和样式
+    
     registerButton.setFixedSize(140, 40);
     changeButton.setFixedSize(140, 40);
     closeButton.setFixedSize(140, 40);
 
-    // 设置按钮样式
+    
     QString buttonStyle = "QPushButton {"
                           "font-size: 14px;"
                           "font-weight: bold;"
@@ -110,18 +109,18 @@ void MainWindow::showAccountDialog()
     changeButton.setStyleSheet(buttonStyle);
     closeButton.setStyleSheet(buttonStyle);
 
-    // 创建竖向按钮布局
+    
     QVBoxLayout buttonLayout;
-    buttonLayout.setSpacing(15); // 增加按钮之间的垂直间距
-    buttonLayout.addStretch(); // 添加弹性空间
-    buttonLayout.addWidget(&registerButton, 0, Qt::AlignCenter); // 居中
-    buttonLayout.addWidget(&changeButton, 0, Qt::AlignCenter); // 居中
-    buttonLayout.addWidget(&closeButton, 0, Qt::AlignCenter); // 居中
-    buttonLayout.addStretch(); // 添加弹性空间
+    buttonLayout.setSpacing(15); 
+    buttonLayout.addStretch(); 
+    buttonLayout.addWidget(&registerButton, 0, Qt::AlignCenter); 
+    buttonLayout.addWidget(&changeButton, 0, Qt::AlignCenter); 
+    buttonLayout.addWidget(&closeButton, 0, Qt::AlignCenter); 
+    buttonLayout.addStretch(); 
 
     layout.addLayout(&buttonLayout);
 
-    // 连接按钮信号
+    
     connect(&registerButton, &QPushButton::clicked, [this, &dialog]() {
         dialog.close();
         this->registerAccount();
@@ -136,7 +135,7 @@ void MainWindow::showAccountDialog()
         dialog.close();
     });
 
-    // 设置样式 - 黑色字体
+    
     dialog.setStyleSheet("QLabel { color: black; font-size: 12px; } QPushButton { color: black; }");
 
     dialog.exec();
@@ -144,43 +143,43 @@ void MainWindow::showAccountDialog()
 
 void MainWindow::registerAccount()
 {
-    // 创建注册对话框 - 增加高度
+    
     QDialog dialog(this);
     dialog.setWindowTitle(tr("注册账号"));
-    dialog.setFixedSize(400, 320);  // 增加宽度和高度
+    dialog.setFixedSize(400, 320);  
 
     QFormLayout form(&dialog);
-    form.setSpacing(15); // 增加行间距
-    form.setLabelAlignment(Qt::AlignRight); // 标签右对齐
+    form.setSpacing(15); 
+    form.setLabelAlignment(Qt::AlignRight); 
 
-    // 用户名输入
+    
     QLineEdit usernameEdit;
     usernameEdit.setPlaceholderText(tr("请输入用户名"));
     usernameEdit.setMinimumHeight(30);
     form.addRow(tr("用户名:"), &usernameEdit);
 
-    // 密码输入
+    
     QLineEdit passwordEdit;
     passwordEdit.setPlaceholderText(tr("请输入密码"));
     passwordEdit.setEchoMode(QLineEdit::Password);
     passwordEdit.setMinimumHeight(30);
     form.addRow(tr("密码:"), &passwordEdit);
 
-    // 确认密码输入
+    
     QLineEdit confirmPasswordEdit;
     confirmPasswordEdit.setPlaceholderText(tr("请确认密码"));
     confirmPasswordEdit.setEchoMode(QLineEdit::Password);
     confirmPasswordEdit.setMinimumHeight(30);
     form.addRow(tr("确认密码:"), &confirmPasswordEdit);
 
-    // 按钮 - 使用水平布局避免重叠
+    
     QHBoxLayout buttonLayout;
-    buttonLayout.setSpacing(20); // 增加按钮间距
+    buttonLayout.setSpacing(20);
 
     QPushButton okButton(tr("确定"), &dialog);
     QPushButton cancelButton(tr("取消"), &dialog);
 
-    // 设置按钮固定大小和样式
+    
     okButton.setFixedSize(120, 40);
     cancelButton.setFixedSize(120, 40);
 
@@ -201,15 +200,15 @@ void MainWindow::registerAccount()
     okButton.setStyleSheet(buttonStyle);
     cancelButton.setStyleSheet(buttonStyle);
 
-    buttonLayout.addStretch(); // 添加弹性空间
+    buttonLayout.addStretch(); 
     buttonLayout.addWidget(&okButton);
     buttonLayout.addWidget(&cancelButton);
-    buttonLayout.addStretch(); // 添加弹性空间
+    buttonLayout.addStretch(); 
 
-    form.addRow("", new QWidget); // 空行
-    form.addRow("", &buttonLayout); // 添加按钮布局
+    form.addRow("", new QWidget); 
+    form.addRow("", &buttonLayout); 
 
-    // 连接按钮信号
+    
     connect(&okButton, &QPushButton::clicked, [&]() {
         QString username = usernameEdit.text().trimmed();
         QString password = passwordEdit.text();
@@ -230,7 +229,7 @@ void MainWindow::registerAccount()
             return;
         }
 
-        // 创建新账号
+        
         Account newAccount;
         if (newAccount.createAccount(username, password, "default")) {
             currentAccount = newAccount;
@@ -246,44 +245,63 @@ void MainWindow::registerAccount()
 
     connect(&cancelButton, &QPushButton::clicked, &dialog, &QDialog::reject);
 
-    // 设置样式 - 黑色字体
+    
     dialog.setStyleSheet("QLabel { color: black; font-size: 12px; } QLineEdit { color: black; font-size: 12px; } QPushButton { color: black; }");
 
     dialog.exec();
 }
 
+
+void MainWindow::onHostCreated(const QString &ip, quint16 port)
+{
+    
+    QMessageBox *msgBox = new QMessageBox(this);
+    msgBox->setWindowTitle(tr("主机创建成功"));
+    msgBox->setText(tr("主机已创建成功！\nIP地址: %1\n端口: %2\n请将此信息分享给其他玩家").arg(ip).arg(port));
+    msgBox->setStyleSheet("QLabel{ color: black; }");
+    msgBox->setStandardButtons(QMessageBox::Ok);
+    msgBox->setModal(false); 
+    msgBox->show();
+
+    
+    connect(msgBox, &QMessageBox::finished, msgBox, &QMessageBox::deleteLater);
+}
+
+
+
+
 void MainWindow::changeAccount()
 {
-    // 创建更换账号对话框 - 增加高度
+    
     QDialog dialog(this);
     dialog.setWindowTitle(tr("更换账号"));
-    dialog.setFixedSize(400, 220);  // 增加宽度
+    dialog.setFixedSize(400, 220);  
 
     QFormLayout form(&dialog);
-    form.setSpacing(15); // 增加行间距
-    form.setLabelAlignment(Qt::AlignRight); // 标签右对齐
+    form.setSpacing(15); 
+    form.setLabelAlignment(Qt::AlignRight); 
 
-    // 账号ID输入
+    
     QLineEdit accountIdEdit;
     accountIdEdit.setPlaceholderText(tr("请输入账号ID"));
     accountIdEdit.setMinimumHeight(30);
     form.addRow(tr("账号ID:"), &accountIdEdit);
 
-    // 密码输入
+    
     QLineEdit passwordEdit;
     passwordEdit.setPlaceholderText(tr("请输入密码"));
     passwordEdit.setEchoMode(QLineEdit::Password);
     passwordEdit.setMinimumHeight(30);
     form.addRow(tr("密码"), &passwordEdit);
 
-    // 按钮 - 使用水平布局避免重叠
+    
     QHBoxLayout buttonLayout;
-    buttonLayout.setSpacing(20); // 增加按钮间距
+    buttonLayout.setSpacing(20); 
 
     QPushButton okButton(tr("确定"), &dialog);
     QPushButton cancelButton(tr("取消"), &dialog);
 
-    // 设置按钮固定大小和样式
+    
     okButton.setFixedSize(120, 40);
     cancelButton.setFixedSize(120, 40);
 
@@ -304,15 +322,15 @@ void MainWindow::changeAccount()
     okButton.setStyleSheet(buttonStyle);
     cancelButton.setStyleSheet(buttonStyle);
 
-    buttonLayout.addStretch(); // 添加弹性空间
+    buttonLayout.addStretch(); 
     buttonLayout.addWidget(&okButton);
     buttonLayout.addWidget(&cancelButton);
-    buttonLayout.addStretch(); // 添加弹性空间
+    buttonLayout.addStretch(); 
 
-    form.addRow("", new QWidget); // 空行
-    form.addRow("", &buttonLayout); // 添加按钮布局
+    form.addRow("", new QWidget); 
+    form.addRow("", &buttonLayout); 
 
-    // 连接按钮信号
+    
     connect(&okButton, &QPushButton::clicked, [&]() {
         QString accountId = accountIdEdit.text().trimmed();
         QString password = passwordEdit.text();
@@ -339,92 +357,137 @@ void MainWindow::changeAccount()
 
     connect(&cancelButton, &QPushButton::clicked, &dialog, &QDialog::reject);
 
-    // 设置样式 - 黑色字体
+    
     dialog.setStyleSheet("QLabel { color: black; font-size: 12px; } QLineEdit { color: black; font-size: 12px; } QPushButton { color: black; }");
 
     dialog.exec();
 }
 
-// 修改showMultiplayerDialog函数
+void GameWindow::startGame()
+{
+    gameEngine->initGame();
+
+    
+    if (isMultiplayerMode && network && isHost && network->isConnected()) {
+        network->requestGameStart(); 
+    }
+
+    timer->start(8);
+    gamePaused = false;
+}
+
+
 void MainWindow::showMultiplayerDialog()
 {
-    // 显示多人游戏对话框
+    
     QStringList items;
     items << tr("创建主机") << tr("连接主机");
 
     bool ok;
-    QString choice = QInputDialog::getItem(
-        this,
-        tr("多人游戏"),
-        tr("选择多人游戏模式:"),
-        items,
-        0,
-        false,
-        &ok
-        );
+
+    
+    QInputDialog dialog(this);
+    dialog.setWindowTitle(tr("多人游戏"));
+    dialog.setLabelText(tr("选择多人游戏模式:"));
+    dialog.setComboBoxItems(items);
+    dialog.setComboBoxEditable(false);
+    dialog.setStyleSheet("color: black;"); 
+
+    ok = dialog.exec();
+    QString choice = dialog.textValue();
 
     if (ok && !choice.isEmpty()) {
         if (choice == tr("创建主机")) {
-            // 创建主机
-            bool portOk;
-            int port = QInputDialog::getInt(
-                this,
-                tr("创建主机"),
-                tr("请输入端口号:"),
-                12345,
-                1024,
-                65535,
-                1,
-                &portOk
-                );
+            
+            QInputDialog portDialog(this);
+            portDialog.setWindowTitle(tr("创建主机"));
+            portDialog.setLabelText(tr("请输入端口号:"));
+            portDialog.setIntValue(12345);
+            portDialog.setIntMinimum(1024);
+            portDialog.setIntMaximum(65535);
+            portDialog.setIntStep(1);
+            portDialog.setStyleSheet("color: black;"); 
+
+            bool portOk = portDialog.exec();
+            int port = portDialog.intValue();
 
             if (portOk) {
-                // 创建网络对象并启动主机
+                
                 Network* network = new Network(this);
                 network->setCurrentAccount(currentAccount);
 
-                if (network->createHost(port)) {
-                    // 启动多人游戏
+                
+                connect(network, &Network::hostCreated, this, &MainWindow::onHostCreated);
+
+                
+                waitingDialog = new WaitingDialog(network, true, this);
+                connect(waitingDialog, &WaitingDialog::gameStarted, this, [this, network]() {
+                    
                     startMultiplayerGame(network, true);
+                    waitingDialog->deleteLater();
+                    waitingDialog = nullptr;
+                });
+                connect(waitingDialog, &WaitingDialog::cancelled, this, [this, network]() {
+                    network->deleteLater();
+                    waitingDialog->deleteLater();
+                    waitingDialog = nullptr;
+                });
+
+                if (network->createHost(port)) {
+                    waitingDialog->exec();
                 } else {
                     QMessageBox::warning(this, tr("错误"),
                                          tr("无法创建主机: %1").arg(network->errorString()));
+                    
+                    network->disconnect();
                     delete network;
                 }
             }
         } else {
-            // 连接主机
-            bool ipOk;
-            QString ip = QInputDialog::getText(
-                this,
-                tr("连接主机"),
-                tr("请输入主机IP地址:"),
-                QLineEdit::Normal,
-                "127.0.0.1",
-                &ipOk
-                );
+            
+            QInputDialog ipDialog(this);
+            ipDialog.setWindowTitle(tr("连接主机"));
+            ipDialog.setLabelText(tr("请输入主机IP地址:"));
+            ipDialog.setTextValue("127.0.0.1");
+            ipDialog.setStyleSheet("color: black;"); 
+
+            bool ipOk = ipDialog.exec();
+            QString ip = ipDialog.textValue();
 
             if (ipOk && !ip.isEmpty()) {
-                bool portOk;
-                int port = QInputDialog::getInt(
-                    this,
-                    tr("连接主机"),
-                    tr("请输入端口号:"),
-                    12345,
-                    1024,
-                    65535,
-                    1,
-                    &portOk
-                    );
+                QInputDialog portDialog(this);
+                portDialog.setWindowTitle(tr("连接主机"));
+                portDialog.setLabelText(tr("请输入端口号:"));
+                portDialog.setIntValue(12345);
+                portDialog.setIntMinimum(1024);
+                portDialog.setIntMaximum(65535);
+                portDialog.setIntStep(1);
+                portDialog.setStyleSheet("color: black;"); 
+
+                bool portOk = portDialog.exec();
+                int port = portDialog.intValue();
 
                 if (portOk) {
-                    // 创建网络对象并连接
+                    
                     Network* network = new Network(this);
                     network->setCurrentAccount(currentAccount);
 
-                    if (network->connectToHost(ip, port)) {
-                        // 启动多人游戏
+                    
+                    waitingDialog = new WaitingDialog(network, false, this);
+                    connect(waitingDialog, &WaitingDialog::gameStarted, this, [this, network]() {
+                        
                         startMultiplayerGame(network, false);
+                        waitingDialog->deleteLater();
+                        waitingDialog = nullptr;
+                    });
+                    connect(waitingDialog, &WaitingDialog::cancelled, this, [this, network]() {
+                        network->deleteLater();
+                        waitingDialog->deleteLater();
+                        waitingDialog = nullptr;
+                    });
+
+                    if (network->connectToHost(ip, port)) {
+                        waitingDialog->exec();
                     } else {
                         QMessageBox::warning(this, tr("错误"),
                                              tr("无法连接到主机: %1").arg(network->errorString()));
@@ -436,14 +499,15 @@ void MainWindow::showMultiplayerDialog()
     }
 }
 
-// 添加启动多人游戏的函数
+
 void MainWindow::startMultiplayerGame(Network* network, bool isHost)
 {
     if (!gameWindow) {
-        gameWindow = new GameWindow(isHost, network, nullptr);
+        
+        gameWindow = new GameWindow(true, network, nullptr);
         connect(gameWindow, &GameWindow::gameFinished, this, &MainWindow::gameFinished);
     } else {
-        // 如果已有游戏窗口，重新设置网络
+        
         gameWindow->setNetwork(network, isHost);
     }
 
@@ -452,27 +516,26 @@ void MainWindow::startMultiplayerGame(Network* network, bool isHost)
     this->hide();
     gameRunning = true;
 }
-
 void MainWindow::showLeaderboard()
 {
     Leaderboard *lb = Leaderboard::instance();
-    QList<Account> topScores = lb->getTopScores(50); // 取前 50 名
+    QList<Account> topScores = lb->getTopScores(50); 
 
-    // 创建排行榜对话框
+    
     QDialog dialog(this);
     dialog.setWindowTitle(tr("排行榜"));
     dialog.setFixedSize(500, 500);
 
     QVBoxLayout layout(&dialog);
 
-    // 创建表格（4列：排名 / ID / 用户名 / 分数）
+    
     QTableWidget table(topScores.size(), 4, &dialog);
     table.setHorizontalHeaderLabels(QStringList() << tr("排名") << tr("账号ID") << tr("用户名") << tr("分数"));
     table.horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     table.setEditTriggers(QAbstractItemView::NoEditTriggers);
     table.setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    // 填充表格数据
+    
     for (int i = 0; i < topScores.size(); i++) {
         const Account &acc = topScores[i];
 
@@ -494,7 +557,7 @@ void MainWindow::showLeaderboard()
 
     layout.addWidget(&table);
 
-    // === 按钮区域 ===
+    
     QHBoxLayout *buttonLayout = new QHBoxLayout();
 
     QPushButton clearButton(tr("清空排行榜"), &dialog);
@@ -505,16 +568,19 @@ void MainWindow::showLeaderboard()
 
     layout.addLayout(buttonLayout);
 
-    // 绑定按钮
+    
     connect(&closeButton, &QPushButton::clicked, &dialog, &QDialog::accept);
     connect(&clearButton, &QPushButton::clicked, [&]() {
         lb->clear();
         QMessageBox::information(&dialog, tr("提示"), tr("排行榜已清空！"));
-        dialog.accept(); // 关闭窗口
+        dialog.accept(); 
     });
 
     dialog.exec();
 }
+
+
+
 
 void MainWindow::on_singlePlayerButton_clicked()
 {
@@ -522,7 +588,7 @@ void MainWindow::on_singlePlayerButton_clicked()
 
     if (!gameWindow) {
         qDebug() << "Creating new GameWindow";
-        gameWindow = new GameWindow(false, nullptr); // 修改为false
+        gameWindow = new GameWindow(false, nullptr); 
         connect(gameWindow, &GameWindow::gameFinished, this, &MainWindow::gameFinished);
     }
 
@@ -542,30 +608,62 @@ void MainWindow::on_multiplayerButton_clicked()
 
 void MainWindow::on_settingsButton_clicked()
 {
-    // 显示设置对话框，包含账号管理和游戏设置
+    
     QStringList items;
     items << tr("账号管理") << tr("游戏设置");
 
-    bool ok;
-    QString choice = QInputDialog::getItem(
-        this,
-        tr("设置"),
-        tr("选择设置选项:"),
-        items,
-        0,
-        false,
-        &ok
-        );
+    
+    QInputDialog dialog(this);
+    dialog.setWindowTitle(tr("设置"));
+    dialog.setLabelText(tr("选择设置选项:"));
+    dialog.setComboBoxItems(items);
+    dialog.setComboBoxEditable(false);
+    dialog.setStyleSheet("color: black;"); 
+
+    bool ok = dialog.exec();
+    QString choice = dialog.textValue();
 
     if (ok && !choice.isEmpty()) {
         if (choice == tr("账号管理")) {
             showAccountDialog();
         } else {
-            QMessageBox msgBox(this);
-            msgBox.setWindowTitle(tr("游戏设置"));
-            msgBox.setText(tr("游戏设置将在后续版本中添加"));
-            msgBox.setStyleSheet("QLabel { color: black; font-size: 12px; }");
-            msgBox.exec();
+            
+            QStringList difficultyOptions;
+            difficultyOptions << tr("简单") << tr("中等") << tr("困难");
+
+            QInputDialog difficultyDialog(this);
+            difficultyDialog.setWindowTitle(tr("游戏设置"));
+            difficultyDialog.setLabelText(tr("选择游戏难度:"));
+            difficultyDialog.setComboBoxItems(difficultyOptions);
+            difficultyDialog.setComboBoxEditable(false);
+            difficultyDialog.setStyleSheet("color: black;"); 
+
+            bool difficultyOk = difficultyDialog.exec();
+            QString difficulty = difficultyDialog.textValue();
+
+            if (difficultyOk && !difficulty.isEmpty()) {
+                
+                if (difficulty == tr("简单")) {
+                    QMessageBox msgBox;
+                    msgBox.setWindowTitle(tr("游戏设置"));
+                    msgBox.setText(tr("已设置为简单难度\n"));
+                    msgBox.setStyleSheet("QLabel { color: black; }");
+                    msgBox.exec();
+                } else if (difficulty == tr("中等")) {
+                    QMessageBox msgBox;
+                    msgBox.setWindowTitle(tr("游戏设置"));
+                    msgBox.setText(tr("已设置为中等难度\n"));
+                    msgBox.setStyleSheet("QLabel { color: black; }");
+                    msgBox.exec();
+                } else if (difficulty == tr("困难")) {
+                    QMessageBox msgBox;
+                    msgBox.setWindowTitle(tr("游戏设置"));
+                    msgBox.setText(tr("已设置为困难难度\n"));
+                    msgBox.setStyleSheet("QLabel { color: black; }");
+                    msgBox.exec();
+                }
+
+            }
         }
     }
 }
@@ -585,17 +683,20 @@ void MainWindow::gameFinished()
     this->show();
     gameRunning = false;
 
-    // 更新最高分
+    
     if (gameWindow && gameWindow->getScore() > currentAccount.getHighScore()) {
         currentAccount.setHighScore(gameWindow->getScore());
         updateAccountDisplay();
 
-        // 更新排行榜
+        
         Leaderboard *lb = Leaderboard::instance();
         lb->updateAccount(currentAccount);
         lb->save();
     }
 
-    // 显示排行榜
+    
     showLeaderboard();
 }
+
+
+

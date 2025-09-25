@@ -6,24 +6,25 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 
-// 修改后的构造函数：支持多人模式和网络
+
 GameWindow::GameWindow(bool isMultiplayer, Network* network, QWidget *parent)
     : QWidget(parent), showDebugInfo(false), gamePaused(false),
-    network(network), isMultiplayerMode(isMultiplayer)
+    network(network), isMultiplayerMode(isMultiplayer), isHost(false)
 {
-    // 创建游戏引擎，传递网络参数
+    
     gameEngine = new GameEngine(width(), height(), isMultiplayer, network, this);
 
-    // 设置定时器
+    
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &GameWindow::updateGame);
 
-    // 连接网络错误信号（如果是多人游戏）
+    
     if (isMultiplayerMode && network) {
         connect(network, &Network::errorOccurred, this, &GameWindow::onNetworkError);
+        connect(network, &Network::disconnected, this, &GameWindow::onNetworkDisconnected);
     }
 
-    // 设置窗口属性
+    
     setFocusPolicy(Qt::StrongFocus);
     setFixedSize(640, 500);
 }
@@ -33,12 +34,9 @@ GameWindow::~GameWindow()
     delete gameEngine;
 }
 
-void GameWindow::startGame()
-{
-    gameEngine->initGame();
-    timer->start(8);
-    gamePaused = false;
-}
+
+
+
 
 void GameWindow::restartGame()
 {
@@ -59,21 +57,39 @@ void GameWindow::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-    // 绘制背景
-    painter.fillRect(rect(), QColor(250, 200, 255));
+    
+    QPixmap background(":/ima/background.jpg");
+    if (!background.isNull()) {
+        
+        painter.drawPixmap(rect(), background.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    } else {
+        
+        painter.fillRect(rect(), QColor(250, 200, 255));
+    }
 
-    // 绘制游戏内容
+    if (isMultiplayerMode && gameEngine->isMultiplayer() &&
+        gameEngine->isWaitingForInitialData()) {  
+        painter.setBrush(QColor(0, 0, 0, 150));
+        painter.setPen(Qt::NoPen);
+        painter.drawRect(rect());
+
+        painter.setPen(Qt::white);
+        painter.setFont(QFont("Arial", 16));
+        painter.drawText(rect(), Qt::AlignCenter, tr("Waiting for host data..."));
+        return;
+    }
+
+    
     gameEngine->draw(painter, showDebugInfo);
 
-    // 绘制分数
+    
     drawScore(painter);
 
-    // 如果游戏暂停或结束，绘制菜单
+    
     if (gamePaused || gameEngine->isGameOver()) {
         drawPauseMenu(painter);
     }
 }
-
 void GameWindow::keyPressEvent(QKeyEvent *event)
 {
     if (gamePaused || gameEngine->isGameOver()) {
@@ -122,9 +138,11 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         break;
     }
 }
+
+
 void GameWindow::setNetwork(Network* network, bool isHost)
 {
-    // 清理旧的网络连接
+    
     if (this->network) {
         disconnect(this->network, &Network::playerPositionReceived,
                    gameEngine, &GameEngine::onPlayerPositionReceived);
@@ -132,15 +150,20 @@ void GameWindow::setNetwork(Network* network, bool isHost)
                    gameEngine, &GameEngine::onGameStateReceived);
         disconnect(this->network, &Network::scoreUpdateReceived,
                    gameEngine, &GameEngine::onScoreUpdateReceived);
+        disconnect(this->network, &Network::platformDataReceived,
+                   gameEngine, &GameEngine::onPlatformDataReceived);
+        disconnect(this->network, &Network::gameInitDataReceived,
+                   gameEngine, &GameEngine::onGameInitDataReceived);
         disconnect(this->network, &Network::errorOccurred,
                    this, &GameWindow::onNetworkError);
     }
 
-    // 设置新的网络对象
+    
     this->network = network;
-    this->isMultiplayerMode = isHost; // 或者 isMultiplayerMode = true;
+    this->isMultiplayerMode = true;
+    this->isHost = isHost;
 
-    // 重新连接信号和槽
+    
     if (network) {
         connect(network, &Network::playerPositionReceived,
                 gameEngine, &GameEngine::onPlayerPositionReceived);
@@ -148,14 +171,34 @@ void GameWindow::setNetwork(Network* network, bool isHost)
                 gameEngine, &GameEngine::onGameStateReceived);
         connect(network, &Network::scoreUpdateReceived,
                 gameEngine, &GameEngine::onScoreUpdateReceived);
+        connect(network, &Network::platformDataReceived,
+                gameEngine, &GameEngine::onPlatformDataReceived);
+        connect(network, &Network::gameInitDataReceived,
+                gameEngine, &GameEngine::onGameInitDataReceived);
         connect(network, &Network::errorOccurred,
                 this, &GameWindow::onNetworkError);
+        connect(network, &Network::disconnected,
+                this, &GameWindow::onNetworkDisconnected);
     }
 
-    // 更新游戏引擎的网络状态
+    
     if (gameEngine) {
         gameEngine->setNetwork(network, isHost);
     }
+}
+
+
+void GameWindow::onNetworkError(const QString &error)
+{
+    gamePaused = true;
+    timer->stop();
+
+    
+    QTimer::singleShot(0, this, [this, error]() {
+        QMessageBox::warning(this, tr("网络错误"),
+                             tr("网络连接出现问题: %1").arg(error));
+        update();
+    });
 }
 
 void GameWindow::keyReleaseEvent(QKeyEvent *event)
@@ -179,6 +222,16 @@ void GameWindow::updateGame()
     } else {
         timer->stop();
     }
+    update();
+}
+
+void GameWindow::onNetworkDisconnected()
+{
+    gamePaused = true;
+    timer->stop();
+
+    QMessageBox::warning(this, tr("连接断开"),
+                         tr("与对方的连接已断开，游戏将暂停"));
     update();
 }
 
@@ -209,7 +262,7 @@ void GameWindow::drawScore(QPainter &painter)
 
 void GameWindow::drawPauseMenu(QPainter &painter)
 {
-    // 绘制半透明背景
+    
     painter.setBrush(QColor(0, 0, 0, 150));
     painter.setPen(Qt::NoPen);
     painter.drawRect(rect());
@@ -235,6 +288,7 @@ void GameWindow::drawPauseMenu(QPainter &painter)
     }
 }
 
+
 void GameWindow::returnToMainMenu()
 {
     timer->stop();
@@ -246,13 +300,5 @@ void GameWindow::toggleDebugInfo()
     showDebugInfo = !showDebugInfo;
 }
 
-// 新增：网络错误处理槽函数
-void GameWindow::onNetworkError(const QString &error)
-{
-    gamePaused = true;
-    timer->stop();
 
-    QMessageBox::warning(this, tr("网络错误"),
-                         tr("网络连接出现问题: %1").arg(error));
-    update();
-}
+

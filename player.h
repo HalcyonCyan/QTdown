@@ -14,7 +14,7 @@ public:
     void jump(double velocity);
     void applyGravity(double gravity);
 
-    // Getter 方法
+    
     double getX() const;
     double getY() const;
     double getWidth() const;
@@ -23,7 +23,7 @@ public:
     bool isJumping() const;
     bool isOnPlatform() const;
 
-    // Setter 方法
+    
     void setX(double x);
     void setY(double y);
     void setVelocity(double velocity);
@@ -41,4 +41,4 @@ private:
     bool onPlatform;
 };
 
-#endif // PLAYER_H
+#endif 

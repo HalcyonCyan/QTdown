@@ -8,19 +8,22 @@
 #include <QPainter>
 #include "player.h"
 #include "platform.h"
-#include "network.h"  // 添加网络头文件
+#include "network.h"
 
 class GameEngine : public QObject
 {
     Q_OBJECT
 public:
-    // 修改构造函数，添加网络参数
     explicit GameEngine(int width, int height, bool isMultiplayer = false,
                         Network* network = nullptr, QObject *parent = nullptr);
-
-
-
     ~GameEngine();
+
+    struct FloatingObject {
+        QPointF position;
+        bool active;
+        Platform* parentPlatform;
+        float radius;
+    };
 
     void initGame();
     void update();
@@ -40,19 +43,29 @@ public:
     double getPlayerY() const;
     int getPlayerScreenY() const;
     bool isBoostActive() const;
-    bool isSlowActive() const;      // 是否处于减速状态
-    bool isBounceActive() const;    // 是否处于高跳状态
-    int getGameTime() const;        // 获取游戏时间
-
-    // 添加远程玩家相关方法
+    bool isSlowActive() const;
+    bool isBounceActive() const;
+    int getGameTime() const;
+    bool isWaitingForInitialData() const { return waitingForInitialData; }
+    
     Player* getRemotePlayer() const { return remotePlayer; }
     bool isMultiplayer() const { return isMultiplayerMode; }
     void setNetwork(Network* network, bool isHost);
+
+    
+    bool checkPlayerCollision() const;
 
 signals:
     void scoreUpdated(int score);
 
 private:
+
+    bool isHost; 
+    bool waitingForInitialData;
+    void serializePlatforms(QByteArray& data) const;
+    void deserializePlatforms(const QByteArray& data);
+    void serializeGameState(QByteArray& data) const;
+    void deserializeGameState(const QByteArray& data);
     void generateInitialPlatforms();
     void generatePlatformBatch();
     void addPlatformToBatch(int y);
@@ -60,15 +73,12 @@ private:
     void removeOffscreenPlatforms();
     void checkGameOver();
     void updateHorizontalMovement();
-
-    // 添加碰撞检测方法
-    void checkPlayerCollisions();
+    QVector<FloatingObject> floatingObjects;
 
     int width;
     int height;
     Player *player;
-    // 添加远程玩家
-    Player* remotePlayer;
+    Player* remotePlayer; 
     QList<Platform*> platforms;
     QList<Platform*> platformBatch;
     QVector<int> recentPlatformXs;
@@ -76,27 +86,27 @@ private:
     int scrollOffset;
     bool gameOver;
 
-    // 平台参数
+    
     int platformWidth;
     int platformHeight;
     int platformMinGap;
     int platformMaxGap;
     int platformScrollSpeed;
 
-    // 批次生成参数
+    
     int batchSize;
     int batchThreshold;
-    const int recentPlatformCount = 5; // 记录最近平台位置的数量
+    const int recentPlatformCount = 5;
 
-    // 特殊状态
+    
     bool boostActive;
     int boostTimer;
-    bool slowActive;     // 减速状态
-    int slowTimer;       // 减速计时器
-    bool bounceActive;   // 高跳状态
-    int bounceTimer;     // 高跳计时器
+    bool slowActive;
+    int slowTimer;
+    bool bounceActive;
+    int bounceTimer;
 
-    // 平滑移动相关变量
+    
     qint64 initTime;
     qint64 lastUpdateTime;
     double deltaTime;
@@ -105,22 +115,24 @@ private:
     float bei;
     const float acceleration = 1.1f;
     const float deceleration = 0.7f;
-    const float maxNormalSpeed = 6.0f;    // 正常最大速度
-    const float maxBoostSpeed = 10.0f;     // 加速最大速度
+    const float maxNormalSpeed = 6.0f;
+    const float maxBoostSpeed = 10.0f;
     int gameTime;
 
-    // 添加网络相关成员
+    
     Network* network;
     bool isMultiplayerMode;
 
-    // 添加远程玩家位置同步计时器
+    
     qint64 lastPositionUpdateTime;
-    const qint64 positionUpdateInterval = 6; // 每6ms更新一次位置
+    const qint64 positionUpdateInterval = 100; 
 
 public slots:
     void onPlayerPositionReceived(double x, double y, double velocity);
     void onGameStateReceived(const QByteArray &state);
     void onScoreUpdateReceived(int score);
+    void onPlatformDataReceived(const QByteArray &data);   
+    void onGameInitDataReceived(const QByteArray &data);
 };
 
-#endif // GAMEENGINE_H
+#endif 
